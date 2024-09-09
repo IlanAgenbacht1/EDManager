@@ -1,7 +1,12 @@
 FUNCTIONALITY
 
-- Geocoding API starts charging after a certain number of uses. Potential switch to different API.
+- Switch from using local db to reading purely off of dropbox. Downloaded json files will be temporarily stored.
+
+- Delete configured trips.
+
+- Delete or update delivery.
 
 UI
 
-- Ability for layout to switch between phone and tablet. Maybe just implement scroll views and keep a static layout.
+- Login Screen for customer name etc
+
