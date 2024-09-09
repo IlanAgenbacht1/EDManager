@@ -1,0 +1,7 @@
+FUNCTIONALITY
+
+- Geocoding API starts charging after a certain number of uses. Potential switch to different API.
+
+UI
+
+- Ability for layout to switch between phone and tablet. Maybe just implement scroll views and keep a static layout.
