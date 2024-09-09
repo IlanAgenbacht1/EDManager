@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@drawable/border_delivery"
+    android:padding="7dp"
+    android:layout_marginBottom="10dp">
+
+    <TextView
+        android:id="@+id/textViewDetailDeliveryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="13dp"
+        android:paddingStart="13dp"
+        android:paddingBottom="6.5dp"
+        android:text="Delivery"
+        android:textColor="@color/theme"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDetailParcelCount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDetailParcelCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
+        android:text="ParcelCount"
+        android:textColor="@color/theme"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDetailDeliveryName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewDetailDeliveryName" />
+
+    <TextView
+        android:id="@+id/textViewDetailCustomer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="6.5dp"
+        android:paddingStart="13dp"
+        android:text="Customer"
+        android:textColor="@color/theme"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDetailDeliveryName" />
+
+    <TextView
+        android:id="@+id/textViewDetailAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="13dp"
+        android:paddingTop="6.5dp"
+        android:paddingEnd="6.5dp"
+        android:paddingBottom="13dp"
+        android:text="Address"
+        android:textColor="@color/theme"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDetailContactNumber"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDetailCustomer" />
+
+    <TextView
+        android:id="@+id/textViewDetailContactName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingEnd="13dp"
+        android:paddingStart="6.5dp"
+        android:text="ContactName"
+        android:textColor="@color/theme"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDetailContactNumber"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDetailContactNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="6.5dp"
+        android:paddingEnd="13dp"
+        android:paddingBottom="13dp"
+        android:text="ContactNumber"
+        android:textColor="@color/theme"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDetailAddress"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,9 +2,342 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/tripBaseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/pearl"
+    android:padding="10dp"
     tools:context=".activity.Trip">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border_trip_creation" >
+
+        <Button
+            android:id="@+id/buttonAddDelivery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/black"
+            android:text="ADD DELIVERY"
+            android:textColor="@color/gold"
+            app:layout_constraintBottom_toTopOf="@+id/buttonCompleteTrip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/buttonCompleteTrip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="15dp"
+            android:backgroundTint="@color/black"
+            android:text="CREATE TRIP"
+            android:textColor="@color/gold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/buttonAddDelivery"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/textViewSpinnerTripTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Trip ID:"
+                    android:textColor="@color/gold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/spinnerTripID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="@color/gold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewSpinnerTripTitle" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabAddTrip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-8dp"
+                    android:backgroundTint="@color/gold"
+                    android:clickable="true"
+                    android:scaleType="center"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"
+                    android:theme="@style/Theme.MaterialComponents"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinnerTripID"
+                    app:layout_constraintStart_toEndOf="@+id/spinnerTripID"
+                    app:layout_constraintTop_toTopOf="@+id/spinnerTripID"
+                    app:srcCompat="@drawable/custom_plus" />
+
+
+                <EditText
+                    android:id="@+id/NewDelivery_editTextDocument"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:hint="Delivery Number"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerTripID" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/customerFieldsLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/border_customerfields"
+                    android:padding="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextDocument">
+
+                    <EditText
+                        android:id="@+id/editTextCustomerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="Name"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        app:layout_constraintStart_toEndOf="@+id/NewDelivery_editTextDocument"
+                        app:layout_constraintTop_toTopOf="@+id/NewDelivery_editTextDocument" />
+
+                    <EditText
+                        android:id="@+id/editTextCustomerContact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="Contact Name"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        app:layout_constraintStart_toEndOf="@+id/editTextCustomerName"
+                        app:layout_constraintTop_toTopOf="@+id/editTextCustomerName" />
+
+                    <EditText
+                        android:id="@+id/editTextCustomerContactNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="Contact Number"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        app:layout_constraintStart_toEndOf="@+id/editTextCustomerContact"
+                        app:layout_constraintTop_toTopOf="@+id/editTextCustomerContact" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textViewCustomerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="-14dp"
+                    android:background="@color/theme"
+                    android:padding="5dp"
+                    android:text="Customer"
+                    android:textColor="@color/gold"
+                    app:layout_constraintBottom_toTopOf="@+id/customerFieldsLayout"
+                    app:layout_constraintStart_toStartOf="@+id/customerFieldsLayout" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/addressFieldsLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/border_customerfields"
+                    android:padding="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/customerFieldsLayout">
+
+                    <TextView
+                        android:id="@+id/textViewAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Empty"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/editTextAddressStreet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="Street"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/NewDelivery_editTextDocument"
+                        app:layout_constraintTop_toTopOf="@+id/NewDelivery_editTextDocument" />
+
+                    <EditText
+                        android:id="@+id/editTextAddressCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="City"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/editTextAddressStreet"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/editTextAddressState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="State"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/editTextAddressCity"
+                        app:layout_constraintTop_toTopOf="@+id/editTextAddressCity" />
+
+                    <EditText
+                        android:id="@+id/editTextAddressPostal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="Postal Code"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/editTextAddressState"
+                        app:layout_constraintTop_toTopOf="@+id/editTextAddressState" />
+
+                    <EditText
+                        android:id="@+id/editTextAddressCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:ems="10"
+                        android:hint="Country"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/editTextAddressPostal"
+                        app:layout_constraintTop_toTopOf="@+id/editTextAddressPostal" />
+
+                    <Button
+                        android:id="@+id/buttonFindAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/gold"
+                        android:text="Find On Map"
+                        android:textColor="@color/theme"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textViewAddressLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="-14dp"
+                    android:background="@color/theme"
+                    android:padding="5dp"
+                    android:text="Address"
+                    android:textColor="@color/gold"
+                    app:layout_constraintBottom_toTopOf="@+id/addressFieldsLayout"
+                    app:layout_constraintStart_toStartOf="@+id/addressFieldsLayout" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/parcelLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/border_customerfields"
+                    android:padding="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addressFieldsLayout">
+
+                    <EditText
+                        android:id="@+id/editTextAddressCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Item ID"
+                        android:inputType="text"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/buttonAddParcel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:backgroundTint="@color/gold"
+                        android:text="Add Item"
+                        android:textColor="@color/theme"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/editTextAddressCountry" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textViewAddressLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="-14dp"
+                    android:background="@color/theme"
+                    android:padding="5dp"
+                    android:text="Items"
+                    android:textColor="@color/gold"
+                    app:layout_constraintBottom_toTopOf="@+id/parcelLayout"
+                    app:layout_constraintStart_toStartOf="@+id/parcelLayout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

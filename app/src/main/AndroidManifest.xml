@@ -2,21 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EDManager"
+        android:theme="@style/Material"
         tools:targetApi="31">
         <activity
-            android:name=".activity.DetailDashboard"
+            android:name=".activity.NewDelivery"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".activity.GoogleLocation"
             android:exported="false" />
         <activity
-            android:name=".activity.Trip"
+            android:name=".activity.DetailDashboard"
             android:exported="false" />
         <activity
             android:name=".activity.Splash"
@@ -29,13 +37,11 @@
         </activity>
         <activity
             android:name=".activity.Dashboard"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBDmnskPN7SxbeTjcQ-f7kLK2mKKN7cdro" />
     </application>
 
 </manifest>
