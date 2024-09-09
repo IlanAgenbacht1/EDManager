@@ -243,9 +243,9 @@ public class NewDelivery extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            if (!DropboxHelper.returnExistingFile(getApplicationContext(), deliveryData.getTripId())) {
+                            if (!DropboxHelper.fileExists(getApplicationContext(), deliveryData.getTripId())) {
 
-                                File file = JsonHelper.writeTripFile(getApplicationContext(), deliveryData, Constant.LOCAL_TRIP_DIRECTORY);
+                                File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_TRIP_DIRECTORY);
 
                                 DropboxHelper.uploadNewFile(getApplicationContext(), file);
 
@@ -253,7 +253,7 @@ public class NewDelivery extends AppCompatActivity {
 
                                 DropboxHelper.downloadFile(getApplicationContext(), deliveryData.getTripId());
 
-                                File file = JsonHelper.writeTripFile(getApplicationContext(), deliveryData, Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
+                                File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
 
                                 DropboxHelper.uploadNewFile(getApplicationContext(), file);
                             }

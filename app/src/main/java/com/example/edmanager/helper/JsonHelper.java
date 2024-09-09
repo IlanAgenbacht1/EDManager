@@ -15,11 +15,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 
 public class JsonHelper {
 
 
-    public static File writeTripFile(Context context, DeliveryModel data, String directory) {
+    public static File createOrAppendTrip(Context context, DeliveryModel data, String directory) {
         try {
 
             File file = new File(context.getFilesDir() + directory);
@@ -37,36 +38,14 @@ public class JsonHelper {
 
                     Log.i("File", "New trip");
 
-                    JSONObject jsonObject = parseDeliveryData(data);
-
-                    JSONArray array = new JSONArray();
-                    array.put(jsonObject);
-
-                    JSONObject jsonFinal = new JSONObject();
-                    jsonFinal.put("stops", array);
-
-                    Writer writer = new BufferedWriter(new FileWriter(file));
-                    writer.write(jsonFinal.toString(4));
-                    writer.close();
+                    writeFile(context, file, data, false);
                 }
 
             } else {
 
                 Log.i("File", "Existing trip");
 
-                JSONObject jsonInitial = readFile(context, data.getTripId());
-
-                JSONObject jsonNewDelivery = parseDeliveryData(data);
-
-                JSONArray array = jsonInitial.getJSONArray("stops");
-                array.put(jsonNewDelivery);
-
-                JSONObject jsonFinal = new JSONObject();
-                jsonFinal.put("stops", array);
-
-                Writer writer = new BufferedWriter(new FileWriter(file));
-                writer.write(jsonFinal.toString(4));
-                writer.close();
+                writeFile(context, file, data, true);
             }
 
             return file;
@@ -126,7 +105,7 @@ public class JsonHelper {
 
             StringBuilder jsonString = new StringBuilder();
 
-            JSONObject tripData = new JSONObject();
+            JSONObject tripData;
 
             try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + trip + ".json")))) {
 
@@ -141,6 +120,69 @@ public class JsonHelper {
             }
 
             return tripData;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+
+    public static void writeFile(Context context, File file, DeliveryModel data, Boolean existingTrip) {
+        try {
+
+            JSONObject jsonFinal = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+
+            if (existingTrip) {
+
+                JSONObject jsonInitial = readFile(context, data.getTripId());
+                jsonArray = jsonInitial.getJSONArray("stops");
+            }
+
+            JSONObject jsonData = parseDeliveryData(data);
+
+            jsonArray.put(jsonData);
+            jsonFinal.put("stops", jsonArray);
+
+            Writer writer = new BufferedWriter(new FileWriter(file));
+            writer.write(jsonFinal.toString(4));
+            writer.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    public static int returnDeliveryCount(Context context, String trip) {
+        try {
+
+            JSONObject jsonData = readFile(context, trip);
+            JSONArray jsonArray = jsonData.getJSONArray("stops");
+
+            return jsonArray.length();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return 0;
+        }
+    }
+
+    public static DeliveryModel[] returnDeliveryData(Context context, String trip) {
+        try {
+
+            DeliveryModel[] deliveryArray;
+
+            JSONObject json = readFile(context, trip);
+            JSONArray jsonArray = json.getJSONArray("stops");
+
+            return deliveryArray;
 
         } catch (Exception e) {
 

@@ -1,5 +1,6 @@
 package com.example.edmanager.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.edmanager.R;
 import com.example.edmanager.database.Database;
 import com.example.edmanager.database.DeliveryModel;
+import com.example.edmanager.helper.JsonHelper;
+import com.example.edmanager.utility.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +23,14 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private List<String> listTrips, listConfiguredTrips;
     private OnItemClickListener listener;
-    private Database database;
+    private Context context;
 
 
-    public DashboardAdapter(ArrayList<String> listTrips, ArrayList<String> listConfiguredTrips, Database database, OnItemClickListener listener) {
+    public DashboardAdapter(ArrayList<String> listTrips, ArrayList<String> listConfiguredTrips, Context context, OnItemClickListener listener) {
 
         this.listTrips = listTrips;
         this.listConfiguredTrips = listConfiguredTrips;
-        this.database = database;
+        this.context = context;
         this.listener = listener;
     }
 
@@ -67,7 +70,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         } else {
 
-            int deliveryCount = database.returnDeliveryCount(listTrips.get(position));
+            int deliveryCount = JsonHelper.returnDeliveryCount(context, listTrips.get(position));
 
             ((ViewHolder) holder).bind(listTrips.get(position), deliveryCount, listener);
         }

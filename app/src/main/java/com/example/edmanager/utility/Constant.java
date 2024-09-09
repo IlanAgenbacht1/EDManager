@@ -10,6 +10,9 @@ public class Constant {
 
     public static String company = "";
     public static String trip = "";
+
+    public static int deliveryCount;
+
     public static Address address;
 
     public static final String LOCAL_TRIP_DIRECTORY = "/Trip/";

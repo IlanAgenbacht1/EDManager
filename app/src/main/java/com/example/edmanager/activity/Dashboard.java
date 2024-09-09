@@ -18,9 +18,12 @@ import com.example.edmanager.R;
 import com.example.edmanager.adapter.DashboardAdapter;
 import com.example.edmanager.database.Database;
 import com.example.edmanager.database.DeliveryModel;
+import com.example.edmanager.helper.FileHelper;
+import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +49,27 @@ public class Dashboard extends AppCompatActivity {
         buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
 
-        //FOR DEV ONLY
-        Constant.company = "DEV";
+        listConfiguredTrips = new ArrayList<>();
+        listTrips = new ArrayList<>();
 
-        database = new Database(this);
+        File[] trips = FileHelper.returnTripFiles(getApplicationContext());
+
+        if (trips != null) {
+
+            for (File tripFile : trips) {
+
+                String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
+
+                listTrips.add(trip);
+
+                if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0) {
+
+                    listConfiguredTrips.add(trip);
+                }
+            }
+        }
+
+        /*database = new Database(this);
         database.open();
 
         listConfiguredTrips = new ArrayList<>();
@@ -61,15 +81,16 @@ public class Dashboard extends AppCompatActivity {
 
                 listConfiguredTrips.add(trip);
             }
-        }
+        }*/
 
-        adapter = new DashboardAdapter(listTrips, listConfiguredTrips, database, new DashboardAdapter.OnItemClickListener() {
+        adapter = new DashboardAdapter(listTrips, listConfiguredTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String tripNumber) {
 
                 if (listConfiguredTrips.contains(tripNumber)) {
 
                     Constant.trip = tripNumber;
+                    Constant.deliveryCount = JsonHelper.returnDeliveryCount(getApplicationContext(), tripNumber);
 
                     startActivity(new Intent(Dashboard.this, DetailDashboard.class));
 

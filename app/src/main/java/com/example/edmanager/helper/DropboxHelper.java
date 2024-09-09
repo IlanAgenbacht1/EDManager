@@ -1,10 +1,7 @@
 package com.example.edmanager.helper;
 
-import static android.text.TextUtils.substring;
-
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
@@ -18,7 +15,6 @@ import com.example.edmanager.utility.ToastLogger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -79,7 +75,7 @@ public class DropboxHelper {
     }
 
 
-    public static boolean returnExistingFile(Context context, String trip) {
+    public static boolean fileExists(Context context, String trip) {
 
         ListFolderResult result = null;
 
@@ -111,7 +107,6 @@ public class DropboxHelper {
 
 
     public static void downloadFile(Context context, String tripName) {
-
         try {
 
             File file = new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
@@ -124,6 +119,37 @@ public class DropboxHelper {
             try (OutputStream outputStream = new FileOutputStream(new File(file.getPath(), tripName + ".json"))) {
 
                 getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH + tripName + ".json").download(outputStream);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void fetchAllTrips(Context context) {
+        try {
+
+            ListFolderResult result = null;
+
+            try {
+
+                result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH);
+
+            } catch (DbxException e) {
+
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String resultItem = result.getEntries().get(i).getName();
+
+                if (resultItem.contains(".json")) {
+
+                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5));
+                }
             }
 
         } catch (Exception e) {
