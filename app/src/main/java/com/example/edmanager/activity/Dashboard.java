@@ -149,12 +149,9 @@ public class Dashboard extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
 
-                            if (database.insertTrip(tripEditText.getText().toString())) {
+                            Constant.listTrips.add(tripEditText.getText().toString());
 
-                                Constant.listTrips.add(tripEditText.getText().toString());
-
-                                adapter.notifyDataSetChanged();
-                            }
+                            adapter.notifyDataSetChanged();
 
                             dialog.cancel();
 

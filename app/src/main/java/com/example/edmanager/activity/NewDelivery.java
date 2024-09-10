@@ -266,7 +266,7 @@ public class NewDelivery extends AppCompatActivity {
 
                 if (!DropboxHelper.fileExists(getApplicationContext(), deliveryData.getTripId())) {
 
-                    File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_TRIP_DIRECTORY);
+                    File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
 
                     DropboxHelper.uploadFile(getApplicationContext(), file);
 
