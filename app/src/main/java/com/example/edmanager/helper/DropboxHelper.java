@@ -25,7 +25,7 @@ public class DropboxHelper {
     private static String APP_SECRET = "q1t553htqu039lh";
 
     private static final String DROPBOX_CLIENT_PATH = "dropbox/";
-    private static final String DROPBOX_CUSTOMER_PATH = "/Customers/" + Constant.company + "/";
+    private static final String DROPBOX_CUSTOMER_PATH = "/Customers/";
     private static final String LOCAL_IMAGE_PATH = "/DeliveryApp/DeliveryImage/";
     private static final String LOCAL_SIGNATURE_PATH = "/DeliveryApp/DeliverySignature/";
 
@@ -47,7 +47,7 @@ public class DropboxHelper {
     }
 
 
-    public static void uploadNewFile(Context context, File file) {
+    public static void uploadFile(Context context, File file) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -55,7 +55,7 @@ public class DropboxHelper {
 
                     try (InputStream inputStream = new FileInputStream(new File(file.getPath()))) {
 
-                        getClient().files().uploadBuilder(DROPBOX_CUSTOMER_PATH + file.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
+                        getClient().files().uploadBuilder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/" + file.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
 
                         file.delete();
 
@@ -81,7 +81,7 @@ public class DropboxHelper {
 
         try {
 
-            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH);
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
 
         } catch (DbxException e) {
 
@@ -118,7 +118,7 @@ public class DropboxHelper {
 
             try (OutputStream outputStream = new FileOutputStream(new File(file.getPath(), tripName + ".json"))) {
 
-                getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH + tripName + ".json").download(outputStream);
+                getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/" + tripName + ".json").download(outputStream);
             }
 
         } catch (Exception e) {
@@ -135,7 +135,7 @@ public class DropboxHelper {
 
             try {
 
-                result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH);
+                result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
 
             } catch (DbxException e) {
 

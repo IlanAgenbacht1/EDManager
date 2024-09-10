@@ -15,9 +15,11 @@ import com.example.edmanager.database.DeliveryModel;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 
+import java.util.ArrayList;
+
 public class DetailDashboard extends AppCompatActivity {
 
-    private DeliveryModel[] deliveryArray;
+    private ArrayList<DeliveryModel> listDeliveries;
     private RecyclerView recyclerView;
     private DetailAdapter detailAdapter;
     private TextView textViewTrip;
@@ -32,10 +34,7 @@ public class DetailDashboard extends AppCompatActivity {
         recyclerView = findViewById(R.id.dashboardDetailRecycler);
         textViewTrip = findViewById(R.id.textViewDetailTripLabel);
 
-        for (int i = 0; i < Constant.deliveryCount; i++) {
-
-            deliveryArray = JsonHelper.returnDeliveryData();
-        }
+        listDeliveries = JsonHelper.returnListDeliveryData(getApplicationContext(), Constant.trip);
 
         /*database = new Database(this);
         database.open();
@@ -44,7 +43,7 @@ public class DetailDashboard extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        detailAdapter = new DetailAdapter(deliveryArray, database, new DetailAdapter.OnItemClickListener() {
+        detailAdapter = new DetailAdapter(listDeliveries, new DetailAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String item) {
 

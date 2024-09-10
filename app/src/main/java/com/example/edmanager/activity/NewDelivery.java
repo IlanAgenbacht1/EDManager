@@ -237,34 +237,7 @@ public class NewDelivery extends AppCompatActivity {
                     deliveryData.setParcelNumbers(listItems);
                     deliveryData.setTripId(textViewTrip.getText().toString());
 
-                    database.insertDelivery(deliveryData);
-
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            if (!DropboxHelper.fileExists(getApplicationContext(), deliveryData.getTripId())) {
-
-                                File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_TRIP_DIRECTORY);
-
-                                DropboxHelper.uploadNewFile(getApplicationContext(), file);
-
-                            } else {
-
-                                DropboxHelper.downloadFile(getApplicationContext(), deliveryData.getTripId());
-
-                                File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
-
-                                DropboxHelper.uploadNewFile(getApplicationContext(), file);
-                            }
-
-                            startActivity(new Intent(NewDelivery.this, DetailDashboard.class));
-
-                            finish();
-                        }
-                    });
-
-                    thread.start();
+                    uploadDelivery();
 
                 } else {
 
@@ -283,6 +256,40 @@ public class NewDelivery extends AppCompatActivity {
                 deliveryData = new DeliveryModel();
             }
         });
+    }
+
+
+    private void uploadDelivery() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if (!DropboxHelper.fileExists(getApplicationContext(), deliveryData.getTripId())) {
+
+                    File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_TRIP_DIRECTORY);
+
+                    DropboxHelper.uploadFile(getApplicationContext(), file);
+
+                    Constant.refreshDashboard = true;
+
+                } else {
+
+                    DropboxHelper.downloadFile(getApplicationContext(), deliveryData.getTripId());
+
+                    File file = JsonHelper.createOrAppendTrip(getApplicationContext(), deliveryData, Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
+
+                    DropboxHelper.uploadFile(getApplicationContext(), file);
+
+                    Constant.refreshDashboard = true;
+                }
+
+                startActivity(new Intent(NewDelivery.this, DetailDashboard.class));
+
+                finish();
+            }
+        });
+
+        thread.start();
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.edmanager.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -21,8 +22,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.edmanager.R;
 import com.example.edmanager.helper.DropboxHelper;
+import com.example.edmanager.helper.FileHelper;
 import com.example.edmanager.utility.Constant;
+import com.example.edmanager.utility.ToastLogger;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
 
 public class Splash extends AppCompatActivity {
 
@@ -44,28 +49,61 @@ public class Splash extends AppCompatActivity {
         proceed = findViewById(R.id.btn_login);
         editTextCompany = findViewById(R.id.et_com);
 
+        Constant.company = "";
+
+        if (GetCompany()!=null && GetCompany().length()>0){
+
+            editTextCompany.setText(GetCompany());
+        }
+
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Constant.company = editTextCompany.getText().toString();
+                if (fieldsValid()) {
 
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+                    StoreCompany(editTextCompany.getText().toString());
+                    Constant.company = GetCompany();
+                    Constant.refreshDashboard = true;
 
-                        DropboxHelper.fetchAllTrips(getApplicationContext());
+                    FileHelper.deleteAllFiles(getApplicationContext());
 
-                        startActivity(new Intent(Splash.this, Dashboard.class));
-                        finish();
-                    }
-                });
+                    Constant.listTrips = new ArrayList<>();
+                    Constant.listConfiguredTrips = new ArrayList<>();
 
-                thread.start();
+                    startActivity(new Intent(Splash.this, Dashboard.class));
+                    finish();
+                }
             }
         });
 
         animateLogo();
+    }
+
+
+    private void StoreCompany(String image_url) {
+        SharedPreferences.Editor editor = getSharedPreferences("COMPANY", MODE_PRIVATE).edit();
+        editor.putString("company", image_url);
+        editor.commit();
+    }
+
+    public String GetCompany() {
+        SharedPreferences shp = this.getSharedPreferences("COMPANY", MODE_PRIVATE);
+        System.out.println("getting Image" + shp.getString("company", ""));
+        return shp.getString("company", "");
+    }
+
+
+    private boolean fieldsValid() {
+
+        if (editTextCompany.getText().toString().equals("")) {
+
+            editTextCompany.requestFocus();
+
+            return false;
+        }
+
+        return true;
     }
 
 

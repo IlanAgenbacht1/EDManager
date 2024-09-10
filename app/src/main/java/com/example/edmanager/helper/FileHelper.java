@@ -53,5 +53,23 @@ public class FileHelper {
             return null;
         }
     }
+
+
+    public static void deleteAllFiles(Context context) {
+        try {
+
+            File[] files = returnTripFiles(context);
+
+            for (File file : files) {
+
+                file.delete();
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
 }
 

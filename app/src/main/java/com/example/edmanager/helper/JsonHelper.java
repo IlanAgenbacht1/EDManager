@@ -1,6 +1,7 @@
 package com.example.edmanager.helper;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import com.example.edmanager.database.DeliveryModel;
@@ -16,6 +17,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 
 public class JsonHelper {
 
@@ -174,15 +176,48 @@ public class JsonHelper {
         }
     }
 
-    public static DeliveryModel[] returnDeliveryData(Context context, String trip) {
+    public static ArrayList<DeliveryModel> returnListDeliveryData(Context context, String trip) {
         try {
-
-            DeliveryModel[] deliveryArray;
 
             JSONObject json = readFile(context, trip);
             JSONArray jsonArray = json.getJSONArray("stops");
 
-            return deliveryArray;
+            ArrayList<DeliveryModel> listDeliveries = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+                DeliveryModel data = new DeliveryModel();
+
+                JSONObject jsonData = jsonArray.getJSONObject(i);
+
+                data.setDocument(jsonData.getString("documentNumber"));
+
+                JSONObject jsonCustomerData = jsonData.getJSONObject("customer");
+                data.setCustomerName(jsonCustomerData.getString("name"));
+                data.setContactName(jsonCustomerData.getString("contactName"));
+                data.setContactNumber(jsonCustomerData.getString("contactNumber"));
+
+                data.setAddress(jsonData.getString("address"));
+
+                JSONObject jsonGpsData = jsonData.getJSONObject("gpsLocation");
+                Location location = new Location("null");
+                location.setLatitude(jsonGpsData.getDouble("latitude"));
+                location.setLongitude(jsonGpsData.getDouble("longitude"));
+                data.setLocation(location);
+
+                data.setNumberOfParcels(jsonData.getInt("numParcels"));
+
+                List<String> listParcels = new ArrayList<>();
+                JSONArray jsonParcels = jsonData.getJSONArray("parcelNumbers");
+                for (int j = 0; j < jsonParcels.length(); j++) {
+                    listParcels.add(jsonParcels.getString(j));
+                }
+                data.setParcelNumbers(listParcels);
+
+                listDeliveries.add(data);
+            }
+
+            return listDeliveries;
 
         } catch (Exception e) {
 

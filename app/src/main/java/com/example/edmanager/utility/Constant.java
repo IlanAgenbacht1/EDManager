@@ -1,17 +1,20 @@
 package com.example.edmanager.utility;
 
 import android.location.Address;
-import android.location.Location;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Constant {
 
     public static String company = "";
     public static String trip = "";
 
+    public static ArrayList<String> listTrips = new ArrayList<>();
+    public static ArrayList<String> listConfiguredTrips = new ArrayList<>();
+
     public static int deliveryCount;
+
+    public static boolean refreshDashboard;
 
     public static Address address;
 

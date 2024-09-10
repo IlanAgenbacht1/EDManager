@@ -19,16 +19,14 @@ import java.util.List;
 
 public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<String> listItems;
-    private Database database;
+    private ArrayList<DeliveryModel> listDeliveries;
     private OnItemClickListener listener;
 
 
-    public DetailAdapter(ArrayList<String> listItems, Database database, OnItemClickListener listener) {
+    public DetailAdapter(ArrayList<DeliveryModel> listDeliveries, OnItemClickListener listener) {
 
-        this.listItems = listItems;
+        this.listDeliveries = listDeliveries;
         this.listener = listener;
-        this.database = database;
     }
 
     public interface OnItemClickListener {
@@ -62,9 +60,9 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         } else {
 
-            if (!listItems.isEmpty()) {
+            if (!listDeliveries.isEmpty()) {
 
-                DeliveryModel data = database.returnDeliveryData(listItems.get(position), Constant.trip);
+                DeliveryModel data = listDeliveries.get(position);
 
                 ((ViewHolder) holder).bind(data, listener);
             }
@@ -87,7 +85,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemCount() {
 
-        return listItems.size() + 1;
+        return listDeliveries.size() + 1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

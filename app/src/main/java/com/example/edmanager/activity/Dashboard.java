@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,21 +19,20 @@ import com.example.edmanager.R;
 import com.example.edmanager.adapter.DashboardAdapter;
 import com.example.edmanager.database.Database;
 import com.example.edmanager.database.DeliveryModel;
+import com.example.edmanager.helper.DropboxHelper;
 import com.example.edmanager.helper.FileHelper;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
+import com.google.android.gms.maps.model.Dash;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Dashboard extends AppCompatActivity {
 
     Button buttonCreateTrip;
     EditText tripEditText;
 
-    ArrayList<String> listTrips, listConfiguredTrips;
     DashboardAdapter adapter;
     RecyclerView recyclerView;
 
@@ -49,26 +49,6 @@ public class Dashboard extends AppCompatActivity {
         buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
 
-        listConfiguredTrips = new ArrayList<>();
-        listTrips = new ArrayList<>();
-
-        File[] trips = FileHelper.returnTripFiles(getApplicationContext());
-
-        if (trips != null) {
-
-            for (File tripFile : trips) {
-
-                String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
-
-                listTrips.add(trip);
-
-                if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0) {
-
-                    listConfiguredTrips.add(trip);
-                }
-            }
-        }
-
         /*database = new Database(this);
         database.open();
 
@@ -83,11 +63,11 @@ public class Dashboard extends AppCompatActivity {
             }
         }*/
 
-        adapter = new DashboardAdapter(listTrips, listConfiguredTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
+        adapter = new DashboardAdapter(Constant.listTrips, Constant.listConfiguredTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String tripNumber) {
 
-                if (listConfiguredTrips.contains(tripNumber)) {
+                if (Constant.listConfiguredTrips.contains(tripNumber)) {
 
                     Constant.trip = tripNumber;
                     Constant.deliveryCount = JsonHelper.returnDeliveryCount(getApplicationContext(), tripNumber);
@@ -120,7 +100,7 @@ public class Dashboard extends AppCompatActivity {
 
                             database.deleteTrip(tripNumber);
 
-                            listTrips.remove(tripNumber);
+                            //listTrips.remove(tripNumber);
 
                             adapter.notifyDataSetChanged();
 
@@ -171,7 +151,7 @@ public class Dashboard extends AppCompatActivity {
 
                             if (database.insertTrip(tripEditText.getText().toString())) {
 
-                                listTrips.add(tripEditText.getText().toString());
+                                Constant.listTrips.add(tripEditText.getText().toString());
 
                                 adapter.notifyDataSetChanged();
                             }
@@ -199,5 +179,71 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        updateFiles();
     }
+
+
+    public void updateFiles() {
+        try {
+
+            if (Constant.refreshDashboard) {
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        DropboxHelper.fetchAllTrips(getApplicationContext());
+
+                        File[] trips = FileHelper.returnTripFiles(getApplicationContext());
+
+                        if (trips != null) {
+
+                            for (File tripFile : trips) {
+
+                                String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
+
+                                if (!Constant.listTrips.contains(trip)) {
+
+                                    Constant.listTrips.add(trip);
+                                }
+
+                                if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0 && !Constant.listConfiguredTrips.contains(trip)) {
+
+                                    Constant.listConfiguredTrips.add(trip);
+                                }
+                            }
+                        }
+                    }
+                });
+
+                thread.start();
+
+                Handler handler = new Handler();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        adapter.notifyDataSetChanged();
+
+                        handler.postDelayed(this, 500);
+                    }
+                });
+
+                Constant.refreshDashboard = false;
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        startActivity(new Intent(Dashboard.this, Splash.class));
+        finish();
+    }
+
 }

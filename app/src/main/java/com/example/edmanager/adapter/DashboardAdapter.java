@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<String> listTrips, listConfiguredTrips;
+    private ArrayList<String> listTrips, listConfiguredTrips;
     private OnItemClickListener listener;
     private Context context;
 
