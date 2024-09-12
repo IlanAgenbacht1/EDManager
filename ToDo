@@ -6,10 +6,12 @@ FUNCTIONALITY
 
 - Delete or update delivery.
 
-- On opening, if no local trip files are found, fetch trip files from dropbox. Both in standard directory and InProgress directory.
+- On opening, if no local trip files are found, fetch trip files from dropbox. Both in standard directory and InProgress directory. (Will most likely become redundant on live releases)
+
 
 UI
 
-- 
+- Decide on color format for theme.
 
+- 
 
