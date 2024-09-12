@@ -10,3 +10,5 @@ UI
 
 - Login Screen for customer name etc
 
+- Use single item layout for dashboard recyler. Empty trips as 'No Deliveries' and status 'not configured'.
+
