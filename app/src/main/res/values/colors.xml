@@ -4,8 +4,12 @@
     <color name="red">#F44336</color>
     <color name="black">#000000</color>
     <color name = "gold" >#FFD700</color>
+    <color name = "goldOpaque" >#FFD700</color>
+    <color name="green">#4CAF50</color>
+    <color name="greenOpaque">#5007da63</color>
     <color name="redOpaque">#50F44336</color>
     <color name="themeOpaque">#302D2D2E</color>
     <color name="theme">#2D2D2E</color>
+    <color name="themeLight">#752D2D2E</color>
     <color name="pearl">#F3EEE7</color>
 </resources>

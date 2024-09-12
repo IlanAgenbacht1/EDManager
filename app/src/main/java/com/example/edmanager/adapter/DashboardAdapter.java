@@ -19,17 +19,16 @@ import com.example.edmanager.utility.Constant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.ViewHolder> {
 
-    private ArrayList<String> listTrips, listConfiguredTrips;
+    private ArrayList<String> listTrips;
     private OnItemClickListener listener;
     private Context context;
 
 
-    public DashboardAdapter(ArrayList<String> listTrips, ArrayList<String> listConfiguredTrips, Context context, OnItemClickListener listener) {
+    public DashboardAdapter(ArrayList<String> listTrips, Context context, OnItemClickListener listener) {
 
         this.listTrips = listTrips;
-        this.listConfiguredTrips = listConfiguredTrips;
         this.context = context;
         this.listener = listener;
     }
@@ -42,52 +41,20 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DashboardAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard, parent, false);
 
-        if (viewType == 0) {
-
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trip_empty, parent, false);
-
-            return new EmptyTripViewHolder(view);
-
-        } else {
-
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard, parent, false);
-
-            return new ViewHolder(view);
-        }
+        return new ViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        if (holder instanceof EmptyTripViewHolder) {
+        int deliveryCount = JsonHelper.returnDeliveryCount(context, listTrips.get(position));
 
-            ((EmptyTripViewHolder) holder).bind(listTrips.get(position), listener);
-
-        } else {
-
-            int deliveryCount = JsonHelper.returnDeliveryCount(context, listTrips.get(position));
-
-            ((ViewHolder) holder).bind(listTrips.get(position), deliveryCount, listener);
-        }
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-
-        if (listConfiguredTrips.contains(listTrips.get(position))) {
-
-            return 1;
-
-        } else {
-
-            return 0;
-        }
+        holder.bind(listTrips.get(position), deliveryCount, listener);
     }
 
 
@@ -98,43 +65,21 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-    public static class EmptyTripViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView textViewTrip;
-
-        public EmptyTripViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            textViewTrip = itemView.findViewById(R.id.itemTripTextView);
-        }
-
-        public void bind(final String tripName, final OnItemClickListener listener) {
-
-            textViewTrip.setText(tripName);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    listener.onItemClick(tripName);
-                }
-            });
-        }
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewTrip;
         private TextView textViewCount;
+        private TextView textViewStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textViewTrip = itemView.findViewById(R.id.textViewTrip);
             textViewCount = itemView.findViewById(R.id.textViewDeliveryCount);
+            textViewStatus = itemView.findViewById(R.id.textViewStatus);
         }
 
-        public void bind(final String tripName, final int deliveryCount, final OnItemClickListener listener) {
+        public void bind(final String tripName, final int deliveryCount, OnItemClickListener listener) {
 
             textViewTrip.setText(tripName);
 
@@ -142,9 +87,32 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 textViewCount.setText(deliveryCount + " Deliveries");
 
+            } else if (deliveryCount == 0){
+
+                textViewCount.setText("No Deliveries");
+
             } else {
 
                 textViewCount.setText(deliveryCount + " Delivery");
+            }
+
+            if (Constant.listInProgressTrips.contains(tripName)) {
+
+                textViewStatus.setVisibility(View.VISIBLE);
+
+                textViewStatus.setText("In Progress");
+                textViewStatus.setTextColor(itemView.getResources().getColor(R.color.gold, null));
+
+            } else if (Constant.listCompletedTrips.contains(tripName)) {
+
+                textViewStatus.setVisibility(View.VISIBLE);
+
+                textViewStatus.setText("Completed");
+                textViewStatus.setTextColor(itemView.getResources().getColor(R.color.green, null));
+
+            } else if (Constant.listConfiguredTrips.contains(tripName) && !Constant.listInProgressTrips.contains(tripName) && !Constant.listCompletedTrips.contains(tripName)) {
+
+                textViewStatus.setVisibility(View.INVISIBLE)    ;
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {

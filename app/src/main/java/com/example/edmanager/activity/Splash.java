@@ -66,10 +66,10 @@ public class Splash extends AppCompatActivity {
                     Constant.company = GetCompany();
                     Constant.refreshDashboard = true;
 
-                    FileHelper.deleteAllFiles(getApplicationContext());
-
                     Constant.listTrips = new ArrayList<>();
                     Constant.listConfiguredTrips = new ArrayList<>();
+                    Constant.listInProgressTrips = new ArrayList<>();
+                    Constant.listCompletedTrips = new ArrayList<>();
 
                     startActivity(new Intent(Splash.this, Dashboard.class));
                     finish();

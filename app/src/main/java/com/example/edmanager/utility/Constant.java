@@ -11,6 +11,8 @@ public class Constant {
 
     public static ArrayList<String> listTrips = new ArrayList<>();
     public static ArrayList<String> listConfiguredTrips = new ArrayList<>();
+    public static ArrayList<String> listInProgressTrips = new ArrayList<>();
+    public static ArrayList<String> listCompletedTrips = new ArrayList<>();
 
     public static int deliveryCount;
 

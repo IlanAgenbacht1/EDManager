@@ -17,6 +17,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class DropboxHelper {
 
@@ -26,6 +28,8 @@ public class DropboxHelper {
 
     private static final String DROPBOX_CLIENT_PATH = "dropbox/";
     private static final String DROPBOX_CUSTOMER_PATH = "/Customers/";
+    private static final String DROPBOX_IN_PROGRESS_PATH = "/InProgress/";
+    private static final String DROPBOX_COMPLETED_PATH = "/Completed/";
     private static final String LOCAL_IMAGE_PATH = "/DeliveryApp/DeliveryImage/";
     private static final String LOCAL_SIGNATURE_PATH = "/DeliveryApp/DeliverySignature/";
 
@@ -56,8 +60,6 @@ public class DropboxHelper {
                     try (InputStream inputStream = new FileInputStream(new File(file.getPath()))) {
 
                         getClient().files().uploadBuilder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/" + file.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
-
-                        file.delete();
 
                         ToastLogger.message(context, "Uploaded file " + file.getName());
                     }
@@ -157,4 +159,49 @@ public class DropboxHelper {
             e.printStackTrace();
         }
     }
+
+
+    public static int returnTripStatus(String trip) {
+        try {
+
+            ArrayList<String> listTrips = new ArrayList<>();
+
+            ListFolderResult result = null;
+
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String item = result.getEntries().get(i).getName();
+
+                item = item.substring(0, item.length() - 5);
+
+                if (item.equals(trip)) {
+
+                    return 0;
+                }
+            }
+
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH);
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String item = result.getEntries().get(i).getName();
+
+                item = item.substring(0, item.length() - 5);
+
+                if (item.equals(trip)) {
+
+                    return 1;
+                }
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return 2;
+    }
+
 }

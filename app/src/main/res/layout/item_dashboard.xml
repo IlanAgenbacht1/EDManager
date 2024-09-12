@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dashboardRecyclerViewItemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="20dp"
     android:foreground="?android:attr/selectableItemBackground"
-    android:background="@drawable/border_trip_bottom">
+    android:background="@drawable/border_dashboard_status_notconfigured"
+    android:layout_marginBottom="5dp">
 
     <TextView
         android:id="@+id/textViewTrip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
         android:padding="5dp"
         android:text="TRIP"
         android:textColor="@color/theme"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/textViewStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,12 +28,24 @@
         android:id="@+id/textViewDeliveryCount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
         android:padding="5dp"
         android:text="COUNT"
         android:textColor="@color/theme"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textViewStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewTrip" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_light"
+        android:text="Not Configured"
+        android:textColor="@color/pearl"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDeliveryCount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewTrip" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

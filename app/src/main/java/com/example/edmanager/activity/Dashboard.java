@@ -49,21 +49,8 @@ public class Dashboard extends AppCompatActivity {
         buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
 
-        /*database = new Database(this);
-        database.open();
 
-        listConfiguredTrips = new ArrayList<>();
-        listTrips = database.returnTrips();
-
-        for (String trip : listTrips) {
-
-            if (database.returnDeliveryCount(trip) > 0) {
-
-                listConfiguredTrips.add(trip);
-            }
-        }*/
-
-        adapter = new DashboardAdapter(Constant.listTrips, Constant.listConfiguredTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
+        adapter = new DashboardAdapter(Constant.listTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String tripNumber) {
 
@@ -98,7 +85,7 @@ public class Dashboard extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            database.deleteTrip(tripNumber);
+                            //database.deleteTrip(tripNumber);
 
                             //listTrips.remove(tripNumber);
 
@@ -112,6 +99,7 @@ public class Dashboard extends AppCompatActivity {
                 }
             }
         });
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -185,28 +173,67 @@ public class Dashboard extends AppCompatActivity {
 
             if (Constant.refreshDashboard) {
 
+                File[] trips = FileHelper.returnTripFiles(getApplicationContext());
+
+                if (trips != null) {
+
+                    for (File tripFile : trips) {
+
+                        String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
+
+                        if (!Constant.listTrips.contains(trip)) {
+
+                            Constant.listTrips.add(trip);
+                        }
+
+                        if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0 && !Constant.listConfiguredTrips.contains(trip)) {
+
+                            Constant.listConfiguredTrips.add(trip);
+                        }
+                    }
+
+                    adapter.notifyDataSetChanged();
+                }
+
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        DropboxHelper.fetchAllTrips(getApplicationContext());
+                        while (true) {
 
-                        File[] trips = FileHelper.returnTripFiles(getApplicationContext());
+                            for (String trip : Constant.listTrips) {
 
-                        if (trips != null) {
+                                int status = DropboxHelper.returnTripStatus(trip);
 
-                            for (File tripFile : trips) {
+                                if (status == 1) {
 
-                                String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
+                                    if (!Constant.listCompletedTrips.contains(trip)) {
 
-                                if (!Constant.listTrips.contains(trip)) {
+                                        Constant.listCompletedTrips.add(trip);
 
-                                    Constant.listTrips.add(trip);
-                                }
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
 
-                                if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0 && !Constant.listConfiguredTrips.contains(trip)) {
+                                                adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
+                                            }
+                                        });
+                                    }
 
-                                    Constant.listConfiguredTrips.add(trip);
+                                } else if (status == 0) {
+
+                                    if (!Constant.listInProgressTrips.contains(trip)) {
+
+                                        Constant.listInProgressTrips.add(trip);
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -214,17 +241,6 @@ public class Dashboard extends AppCompatActivity {
                 });
 
                 thread.start();
-
-                Handler handler = new Handler();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        adapter.notifyDataSetChanged();
-
-                        handler.postDelayed(this, 500);
-                    }
-                });
 
                 Constant.refreshDashboard = false;
             }
@@ -234,6 +250,7 @@ public class Dashboard extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void onBackPressed() {
