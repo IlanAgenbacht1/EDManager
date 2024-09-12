@@ -6,9 +6,10 @@ FUNCTIONALITY
 
 - Delete or update delivery.
 
+- On opening, if no local trip files are found, fetch trip files from dropbox. Both in standard directory and InProgress directory.
+
 UI
 
-- Login Screen for customer name etc
+- 
 
-- Use single layout item (item_dashboard) for dashboard recyler. Empty trips as 'No Deliveries' and status 'not configured'.
 
