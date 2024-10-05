@@ -1,14 +1,12 @@
 FUNCTIONALITY
 
-- Switch from using local db to reading purely off of dropbox. Downloaded json files will be temporarily stored.
-
-- Delete configured trips.
-
 - Delete or update delivery.
+
+- Enable or deploy a trip which would prevent a user from editing a trip or its deliveries. Would require a DRAFTED folder in Dropbox. Once trip is deployed its moved out of said folder.
 
 UI
 
-- Login Screen for customer name etc
+- Redo flow for New Delivery
 
-- Use single layout item (item_dashboard) for dashboard recyler. Empty trips as 'No Deliveries' and status 'not configured'.
+- Find spot for logo
 
