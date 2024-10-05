@@ -41,7 +41,7 @@
         android:layout_marginTop="30dp"
         android:backgroundTint="@color/theme"
         android:text="Proceed"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

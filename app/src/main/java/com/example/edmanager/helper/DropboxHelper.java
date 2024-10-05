@@ -7,6 +7,7 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.oauth.DbxCredential;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.WriteMode;
 import com.example.edmanager.utility.Constant;
@@ -108,10 +109,10 @@ public class DropboxHelper {
     }
 
 
-    public static void downloadFile(Context context, String tripName) {
+    public static void downloadFile(Context context, String tripName, String dropboxDirectory) {
         try {
 
-            File file = new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
+            File file = new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/");
 
             if (!file.exists()) {
 
@@ -120,7 +121,14 @@ public class DropboxHelper {
 
             try (OutputStream outputStream = new FileOutputStream(new File(file.getPath(), tripName + ".json"))) {
 
-                getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/" + tripName + ".json").download(outputStream);
+                if (dropboxDirectory == null) {
+
+                    getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH + Constant.company + "/" + tripName + ".json").download(outputStream);
+
+                } else {
+
+                    getClient().files().downloadBuilder(dropboxDirectory + tripName + ".json").download(outputStream);
+                }
             }
 
         } catch (Exception e) {
@@ -133,16 +141,7 @@ public class DropboxHelper {
     public static void fetchAllTrips(Context context) {
         try {
 
-            ListFolderResult result = null;
-
-            try {
-
-                result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
-
-            } catch (DbxException e) {
-
-                e.printStackTrace();
-            }
+            ListFolderResult result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
 
             for (int i = 0; i < result.getEntries().size(); i++) {
 
@@ -150,7 +149,38 @@ public class DropboxHelper {
 
                 if (resultItem.contains(".json")) {
 
-                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5));
+                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5), null);
+                }
+            }
+
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String resultItem = result.getEntries().get(i).getName();
+
+                if (resultItem.contains(".json")) {
+
+                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
+                }
+            }
+
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH);
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String resultItem = result.getEntries().get(i).getName();
+
+                ListFolderResult completedResult = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + resultItem + "/");
+
+                for (int j = 0; j < completedResult.getEntries().size(); j++) {
+
+                    resultItem = completedResult.getEntries().get(j).getName();
+
+                    if (resultItem.contains(".json")) {
+
+                        downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + resultItem.substring(0, resultItem.length() - 5) + "/");
+                    }
                 }
             }
 
@@ -164,11 +194,7 @@ public class DropboxHelper {
     public static int returnTripStatus(String trip) {
         try {
 
-            ArrayList<String> listTrips = new ArrayList<>();
-
-            ListFolderResult result = null;
-
-            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
+            ListFolderResult result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
 
             for (int i = 0; i < result.getEntries().size(); i++) {
 
@@ -177,24 +203,37 @@ public class DropboxHelper {
                 item = item.substring(0, item.length() - 5);
 
                 if (item.equals(trip)) {
+
+                    //Log.i("SYNC", trip + " in progress");
 
                     return 0;
                 }
             }
 
-            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH);
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + trip + "/");
 
             for (int i = 0; i < result.getEntries().size(); i++) {
 
                 String item = result.getEntries().get(i).getName();
 
-                item = item.substring(0, item.length() - 5);
+                if (item.contains(".json")) {
 
-                if (item.equals(trip)) {
+                    item = item.substring(0, item.length() - 5);
 
-                    return 1;
+                    if (item.equals(trip)) {
+
+                        //Log.i("SYNC",  trip + " completed");
+
+                        return 1;
+                    }
                 }
             }
+
+        } catch (ListFolderErrorException e) {
+
+            Log.i("SYNC", trip + " not completed");
+
+            return 2;
 
         } catch (Exception e) {
 
@@ -202,6 +241,20 @@ public class DropboxHelper {
         }
 
         return 2;
+    }
+
+
+    public static void deleteFile(String trip) {
+        try {
+
+            getClient().files().deleteV2(DROPBOX_CUSTOMER_PATH + Constant.company + "/" + trip + ".json");
+
+            Log.i("SYNC", trip + " deleted.");
+
+        } catch (Exception e) {
+
+
+        }
     }
 
 }

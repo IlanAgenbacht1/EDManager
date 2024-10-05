@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/pearl">
+
+    <!-- The background shape of the button with the border -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Define your border here -->
+            <solid android:color="@color/theme" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+
+    <!-- Mask to ensure the ripple respects the shape -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <corners android:radius="5dp" />
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+</ripple>

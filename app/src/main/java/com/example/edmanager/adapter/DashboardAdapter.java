@@ -1,23 +1,20 @@
 package com.example.edmanager.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.edmanager.R;
-import com.example.edmanager.database.Database;
-import com.example.edmanager.database.DeliveryModel;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.ViewHolder> {
 
@@ -36,6 +33,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
 
     public interface OnItemClickListener {
         void onItemClick(String tripNumber);
+        void onItemLongClick(String tripNumber);
     }
 
 
@@ -81,6 +79,20 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
 
         public void bind(final String tripName, final int deliveryCount, OnItemClickListener listener) {
 
+            if (Constant.highlightTripDelete) {
+
+                if (Constant.listDeleteTrips.contains(tripName)) {
+
+                    itemView.setForeground(itemView.getResources().getDrawable(R.drawable.border_dashboard_status_inprogress, null));
+
+                } else {
+
+                    itemView.setForeground(null);
+                }
+
+                Constant.highlightTripDelete = false;
+            }
+
             textViewTrip.setText(tripName);
 
             if (deliveryCount > 1) {
@@ -112,15 +124,18 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
 
             } else if (Constant.listConfiguredTrips.contains(tripName) && !Constant.listInProgressTrips.contains(tripName) && !Constant.listCompletedTrips.contains(tripName)) {
 
+                Log.i("SYNC", tripName + " configured");
+
                 textViewStatus.setVisibility(View.INVISIBLE)    ;
             }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            // Set click listener
+            itemView.setOnClickListener(view -> listener.onItemClick(tripName));
 
-                    listener.onItemClick(tripName);
-                }
+            // Set long click listener
+            itemView.setOnLongClickListener(view -> {
+                listener.onItemLongClick(tripName);
+                return true; // Return true to indicate the event was handled
             });
         }
 

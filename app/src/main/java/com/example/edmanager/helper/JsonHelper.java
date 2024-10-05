@@ -109,7 +109,7 @@ public class JsonHelper {
 
             JSONObject tripData;
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + trip + ".json")))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/" + trip + ".json")))) {
 
                 String line;
 

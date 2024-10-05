@@ -49,7 +49,9 @@ public class DetailDashboard extends AppCompatActivity {
 
                 if (item.equals("ADD_DELIVERY")) {
 
-                    startActivity(new Intent(DetailDashboard.this, NewDelivery.class));
+                    Constant.listParcels = new ArrayList<>();
+
+                    startActivity(new Intent(DetailDashboard.this, NewDeliveryHeader.class));
 
                     finish();
                 }

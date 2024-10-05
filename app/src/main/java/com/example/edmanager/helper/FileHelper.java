@@ -37,12 +37,14 @@ public class FileHelper {
     public static File[] returnTripFiles(Context context) {
         try {
 
-            File directory = new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY);
+            File directory = new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/");
 
             if (directory.exists()) {
 
                 return directory.listFiles();
             }
+
+            directory.mkdirs();
 
             return null;
 
@@ -60,9 +62,35 @@ public class FileHelper {
 
             File[] files = returnTripFiles(context);
 
-            for (File file : files) {
+            if (files != null) {
 
-                file.delete();
+                for (File file : files) {
+
+                    file.delete();
+                }
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void deleteFile(Context context, String fileName) {
+        try {
+
+            File[] files = returnTripFiles(context);
+
+            if (files != null) {
+
+                for (File file : files) {
+
+                    if (file.getName().substring(0, file.getName().length() - 5).equals(fileName)) {
+
+                        file.delete();
+                    }
+                }
             }
 
         } catch (Exception e) {

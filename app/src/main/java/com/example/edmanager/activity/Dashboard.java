@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -12,33 +12,36 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionManager;
 
 import com.example.edmanager.R;
 import com.example.edmanager.adapter.DashboardAdapter;
-import com.example.edmanager.database.Database;
-import com.example.edmanager.database.DeliveryModel;
 import com.example.edmanager.helper.DropboxHelper;
 import com.example.edmanager.helper.FileHelper;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
-import com.google.android.gms.maps.model.Dash;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
     Button buttonCreateTrip;
+    ConstraintLayout buttonDeleteTrip, constraintLayout;
     EditText tripEditText;
 
     DashboardAdapter adapter;
     RecyclerView recyclerView;
 
-    DeliveryModel tripData;
+    Boolean deleteModeAnimated;
+    int originalEndMargin;
 
-    Database database;
+    File[] localTrips;
 
 
     @Override
@@ -47,59 +50,95 @@ public class Dashboard extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
+        buttonDeleteTrip = findViewById(R.id.customButtonDelete);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
+        constraintLayout = findViewById(R.id.dashboardLayout);
 
+        Constant.listDeleteTrips = new ArrayList<>();
+        deleteModeAnimated = false;
+        originalEndMargin = ((ConstraintLayout.LayoutParams) buttonCreateTrip.getLayoutParams()).rightMargin;
 
         adapter = new DashboardAdapter(Constant.listTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String tripNumber) {
 
-                if (Constant.listConfiguredTrips.contains(tripNumber)) {
+                if (!Constant.deleteMode) {
 
-                    Constant.trip = tripNumber;
-                    Constant.deliveryCount = JsonHelper.returnDeliveryCount(getApplicationContext(), tripNumber);
+                    if (Constant.listConfiguredTrips.contains(tripNumber)) {
 
-                    startActivity(new Intent(Dashboard.this, DetailDashboard.class));
+                        if (Constant.listCompletedTrips.contains(tripNumber)) {
 
-                    finish();
+                            ToastLogger.message(getApplicationContext(), "This will open up a screen showing all captured data. The user might then archive the trip once done viewing.");
 
-                } else {
+                        } else if (Constant.listInProgressTrips.contains(tripNumber)) {
 
-                    AlertDialog dialog = new AlertDialog.Builder(Dashboard.this, R.style.AlertDialogStyle).create();
+                            ToastLogger.message(getApplicationContext(), "Trip in progress.");
 
-                    dialog.setTitle("Delete Empty Trip/Add Delivery");
-
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add Delivery", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        } else {
 
                             Constant.trip = tripNumber;
+                            Constant.deliveryCount = JsonHelper.returnDeliveryCount(getApplicationContext(), tripNumber);
 
-                            startActivity(new Intent(Dashboard.this, NewDelivery.class));
+                            startActivity(new Intent(Dashboard.this, DetailDashboard.class));
 
                             finish();
                         }
-                    });
 
-                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Delete Trip", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                    } else {
 
-                            //database.deleteTrip(tripNumber);
+                        AlertDialog dialog = new AlertDialog.Builder(Dashboard.this, R.style.AlertDialogStyle).create();
 
-                            //listTrips.remove(tripNumber);
+                        dialog.setTitle("Delete Empty Trip/Add Delivery");
 
-                            adapter.notifyDataSetChanged();
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add Delivery", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                            dialog.cancel();
-                        }
-                    });
+                                Constant.trip = tripNumber;
+                                Constant.listParcels = new ArrayList<>();
 
-                    dialog.show();
+                                startActivity(new Intent(Dashboard.this, NewDeliveryHeader.class));
+
+                                finish();
+                            }
+                        });
+
+                        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Delete Trip", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                //database.deleteTrip(tripNumber);
+
+                                //listTrips.remove(tripNumber);
+
+                                adapter.notifyDataSetChanged();
+
+                                dialog.cancel();
+                            }
+                        });
+
+                        dialog.show();
+                    }
+
+                } else {
+
+                    if (Constant.listDeleteTrips.size() == 1) {
+
+                        ToastLogger.message(getApplicationContext(), "Please finish deleting " + Constant.listDeleteTrips.get(0));
+
+                    } else {
+
+                        ToastLogger.message(getApplicationContext(), "Please finish deleting selected trips");
+                    }
                 }
             }
-        });
 
+            @Override
+            public void onItemLongClick(String tripNumber) {
+
+                runDeleteMode(tripNumber);
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -123,6 +162,7 @@ public class Dashboard extends AppCompatActivity {
                         tripEditText.post(new Runnable() {
                             @Override
                             public void run() {
+
                                 InputMethodManager inputMethodManager= (InputMethodManager) Dashboard.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                                 inputMethodManager.showSoftInput(tripEditText, InputMethodManager.SHOW_IMPLICIT);
                             }
@@ -164,6 +204,59 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        buttonDeleteTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                for (String tripName :Constant.listDeleteTrips) {
+
+                    FileHelper.deleteFile(getApplicationContext(), tripName);
+
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            DropboxHelper.deleteFile(tripName);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    int position = Constant.listTrips.indexOf(tripName);
+
+                                    Constant.listDeleteTrips.remove(tripName);
+
+                                    adapter.notifyItemRemoved(position);
+
+                                    Constant.listTrips.remove(tripName);
+                                    Constant.listConfiguredTrips.remove(tripName);
+
+                                    if (Constant.listDeleteTrips.size() < 1) {
+
+                                        ConstraintSet constraintSet = new ConstraintSet();
+                                        constraintSet.clone(constraintLayout);
+
+                                        // Apply new end margin
+                                        constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, originalEndMargin);
+
+                                        TransitionManager.beginDelayedTransition(constraintLayout);
+                                        constraintSet.applyTo(constraintLayout);
+
+                                        buttonDeleteTrip.setVisibility(View.INVISIBLE);
+
+                                        deleteModeAnimated = false;
+                                        Constant.deleteMode = false;
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    thread.start();
+                }
+            }
+        });
+
         updateFiles();
     }
 
@@ -173,11 +266,50 @@ public class Dashboard extends AppCompatActivity {
 
             if (Constant.refreshDashboard) {
 
-                File[] trips = FileHelper.returnTripFiles(getApplicationContext());
+                localTrips = FileHelper.returnTripFiles(getApplicationContext());
 
-                if (trips != null) {
+                if (localTrips == null || localTrips.length == 0) {
 
-                    for (File tripFile : trips) {
+                    ToastLogger.message(getApplicationContext(), "Loading trips...");
+
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            DropboxHelper.fetchAllTrips(getApplicationContext());
+
+                            localTrips = FileHelper.returnTripFiles(getApplicationContext());
+
+                            for (File tripFile : localTrips) {
+
+                                String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
+
+                                if (!Constant.listTrips.contains(trip)) {
+
+                                    Constant.listTrips.add(trip);
+                                }
+
+                                if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0 && !Constant.listConfiguredTrips.contains(trip)) {
+
+                                    Constant.listConfiguredTrips.add(trip);
+                                }
+                            }
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    });
+
+                    thread.start();
+
+                } else {
+
+                    for (File tripFile : localTrips) {
 
                         String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
 
@@ -195,59 +327,150 @@ public class Dashboard extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                 }
 
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        while (true) {
-
-                            for (String trip : Constant.listTrips) {
-
-                                int status = DropboxHelper.returnTripStatus(trip);
-
-                                if (status == 1) {
-
-                                    if (!Constant.listCompletedTrips.contains(trip)) {
-
-                                        Constant.listCompletedTrips.add(trip);
-
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
-                                            }
-                                        });
-                                    }
-
-                                } else if (status == 0) {
-
-                                    if (!Constant.listInProgressTrips.contains(trip)) {
-
-                                        Constant.listInProgressTrips.add(trip);
-
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                thread.start();
-
                 Constant.refreshDashboard = false;
             }
+
+            updateStatus();
 
         } catch (Exception e) {
 
             e.printStackTrace();
+        }
+    }
+
+
+    public void updateStatus() {
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (true) {
+
+                    ArrayList<String> listTripsCopy = new ArrayList<>();
+
+                    listTripsCopy.addAll(Constant.listTrips);
+
+                    for (String trip : listTripsCopy) {
+
+                        int status = DropboxHelper.returnTripStatus(trip);
+
+                        if (status == 1) {
+
+                            if (!Constant.listCompletedTrips.contains(trip)) {
+
+                                Constant.listCompletedTrips.add(trip);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
+
+                                        Log.i("SYNC", trip + " completed");
+                                    }
+                                });
+                            }
+
+                        } else if (status == 0) {
+
+                            if (!Constant.listInProgressTrips.contains(trip)) {
+
+                                Constant.listInProgressTrips.add(trip);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
+
+                                        Log.i("SYNC", trip + " in progress");
+                                    }
+                                });
+                            }
+
+                        } else if (status == 2) {
+
+                            if (Constant.listInProgressTrips.contains(trip)) {
+
+                                Constant.listInProgressTrips.remove(trip);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
+
+                                        Log.i("SYNC", trip + " open");
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        thread.start();
+    }
+
+
+    public void runDeleteMode(String tripNumber) {
+
+        Constant.highlightTripDelete = true;
+
+        int originalWidth = buttonCreateTrip.getWidth();
+        int newWidth = (int) (originalWidth * 0.82);
+        int newEndMargin = originalEndMargin + (originalWidth - newWidth);
+
+        if (Constant.listDeleteTrips.contains(tripNumber)) {
+
+            Constant.listDeleteTrips.remove(tripNumber);
+
+            Constant.deleteMode = true;
+
+            adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
+
+            if (Constant.listDeleteTrips.size() < 1) {
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+
+                // Apply new end margin
+                constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, originalEndMargin);
+
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.applyTo(constraintLayout);
+
+                buttonDeleteTrip.setVisibility(View.INVISIBLE);
+
+                deleteModeAnimated = false;
+                Constant.deleteMode = false;
+            }
+
+        } else {
+
+            Constant.listDeleteTrips.add(tripNumber);
+
+            Constant.deleteMode = true;
+
+            adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
+
+            if (!deleteModeAnimated) {
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+
+                // Apply new end margin
+                constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, newEndMargin);
+
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.applyTo(constraintLayout);
+
+                buttonDeleteTrip.setVisibility(View.VISIBLE);
+
+                deleteModeAnimated = true;
+            }
         }
     }
 
