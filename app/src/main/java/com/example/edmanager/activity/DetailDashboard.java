@@ -31,6 +31,7 @@ public class DetailDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_dashboard);
 
+
         recyclerView = findViewById(R.id.dashboardDetailRecycler);
         textViewTrip = findViewById(R.id.textViewDetailTripLabel);
 
