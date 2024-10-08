@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape
-            android:shape="rectangle" >
-            <corners
-                android:radius="10dp" />
-            <solid
-                android:color="@color/theme" />
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" /> <!-- Rounded corners -->
+            <solid android:color="@android:color/transparent" /> <!-- Transparent background -->
+            <stroke
+                android:width="0.5dp"
+            android:color="@color/pearl" /> <!-- Set your desired border color -->
         </shape>
     </item>
 </layer-list>

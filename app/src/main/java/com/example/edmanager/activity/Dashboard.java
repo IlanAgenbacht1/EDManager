@@ -1,5 +1,7 @@
 package com.example.edmanager.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import com.example.edmanager.helper.FileHelper;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +37,8 @@ public class Dashboard extends AppCompatActivity {
     Button buttonCreateTrip;
     ConstraintLayout buttonDeleteTrip, constraintLayout;
     EditText tripEditText;
+
+    FloatingActionButton fabCreateTrip;
 
     DashboardAdapter adapter;
     RecyclerView recyclerView;
@@ -49,20 +54,21 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
+        //buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
         buttonDeleteTrip = findViewById(R.id.customButtonDelete);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
         constraintLayout = findViewById(R.id.dashboardLayout);
+        fabCreateTrip = findViewById(R.id.fabCreateTrip);
 
         Constant.listDeleteTrips = new ArrayList<>();
         deleteModeAnimated = false;
-        originalEndMargin = ((ConstraintLayout.LayoutParams) buttonCreateTrip.getLayoutParams()).rightMargin;
+        //originalEndMargin = ((ConstraintLayout.LayoutParams) buttonCreateTrip.getLayoutParams()).rightMargin;
 
         adapter = new DashboardAdapter(Constant.listTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String tripNumber) {
 
-                if (!Constant.deleteMode) {
+                if (!Constant.tripDeleteMode) {
 
                     if (Constant.listConfiguredTrips.contains(tripNumber)) {
 
@@ -143,7 +149,7 @@ public class Dashboard extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        buttonCreateTrip.setOnClickListener(new View.OnClickListener() {
+        fabCreateTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -245,7 +251,7 @@ public class Dashboard extends AppCompatActivity {
                                         buttonDeleteTrip.setVisibility(View.INVISIBLE);
 
                                         deleteModeAnimated = false;
-                                        Constant.deleteMode = false;
+                                        Constant.tripDeleteMode = false;
                                     }
                                 }
                             });
@@ -300,6 +306,14 @@ public class Dashboard extends AppCompatActivity {
                                 public void run() {
 
                                     adapter.notifyDataSetChanged();
+
+                                    fabCreateTrip.setVisibility(View.VISIBLE);
+                                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
+                                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
+                                    AnimatorSet animatorSet = new AnimatorSet();
+                                    animatorSet.playTogether(scaleX, scaleY);
+                                    animatorSet.setDuration(400); // animation duration in milliseconds
+                                    animatorSet.start();
                                 }
                             });
                         }
@@ -325,9 +339,27 @@ public class Dashboard extends AppCompatActivity {
                     }
 
                     adapter.notifyDataSetChanged();
+
+                    fabCreateTrip.setVisibility(View.VISIBLE);
+                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
+                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(scaleX, scaleY);
+                    animatorSet.setDuration(400); // animation duration in milliseconds
+                    animatorSet.start();
                 }
 
                 Constant.refreshDashboard = false;
+
+            } else {
+
+                fabCreateTrip.setVisibility(View.VISIBLE);
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.playTogether(scaleX, scaleY);
+                animatorSet.setDuration(400); // animation duration in milliseconds
+                animatorSet.start();
             }
 
             updateStatus();
@@ -417,57 +449,31 @@ public class Dashboard extends AppCompatActivity {
 
     public void runDeleteMode(String tripNumber) {
 
-        Constant.highlightTripDelete = true;
-
-        int originalWidth = buttonCreateTrip.getWidth();
-        int newWidth = (int) (originalWidth * 0.82);
-        int newEndMargin = originalEndMargin + (originalWidth - newWidth);
+        //Constant.tripHighlightedForDelete = true;
 
         if (Constant.listDeleteTrips.contains(tripNumber)) {
 
             Constant.listDeleteTrips.remove(tripNumber);
 
-            Constant.deleteMode = true;
+            Constant.tripDeleteMode = true;
 
             adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
 
             if (Constant.listDeleteTrips.size() < 1) {
 
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-
-                // Apply new end margin
-                constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, originalEndMargin);
-
-                TransitionManager.beginDelayedTransition(constraintLayout);
-                constraintSet.applyTo(constraintLayout);
-
-                buttonDeleteTrip.setVisibility(View.INVISIBLE);
-
                 deleteModeAnimated = false;
-                Constant.deleteMode = false;
+                Constant.tripDeleteMode = false;
             }
 
         } else {
 
             Constant.listDeleteTrips.add(tripNumber);
 
-            Constant.deleteMode = true;
+            Constant.tripDeleteMode = true;
 
             adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
 
             if (!deleteModeAnimated) {
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-
-                // Apply new end margin
-                constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, newEndMargin);
-
-                TransitionManager.beginDelayedTransition(constraintLayout);
-                constraintSet.applyTo(constraintLayout);
-
-                buttonDeleteTrip.setVisibility(View.VISIBLE);
 
                 deleteModeAnimated = true;
             }

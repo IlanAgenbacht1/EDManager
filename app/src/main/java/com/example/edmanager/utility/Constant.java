@@ -19,12 +19,15 @@ public class Constant {
     public static ArrayList<String> listInProgressTrips = new ArrayList<>();
     public static ArrayList<String> listCompletedTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteTrips = new ArrayList<>();
+    public static ArrayList<String> listDeleteDeliveries = new ArrayList<>();
 
     public static int deliveryCount;
 
     public static boolean refreshDashboard;
-    public static boolean highlightTripDelete;
-    public static boolean deleteMode;
+    public static boolean tripHighlightedForDelete;
+    public static boolean deliveryHighlightedForDelete;
+    public static boolean tripDeleteMode;
+    public static boolean deliveryDeleteMode;
 
     public static Address address;
 

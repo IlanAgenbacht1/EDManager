@@ -1,5 +1,7 @@
 package com.example.edmanager.adapter;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface OnItemClickListener {
         void onItemClick(String item);
+        void onItemLongClick(String deliveryNumber);
     }
 
     @NonNull
@@ -110,6 +113,18 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bind(final DeliveryModel data, final OnItemClickListener listener) {
 
+            if (Constant.listDeleteDeliveries.contains(data.getDocument())) {
+
+                itemView.setForeground(itemView.getResources().getDrawable(R.drawable.border_dashboard_status_inprogress, null));
+
+            } else {
+
+                TypedValue typedValue = new TypedValue();
+                Context context = itemView.getContext();
+                context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+                itemView.setForeground(context.getDrawable(typedValue.resourceId));
+            }
+
             textViewDelivery.setText(data.getDocument());
             textViewParcelCount.setText(data.getNumberOfParcels() + " Parcels");
             textViewCustomer.setText(data.getCustomerName());
@@ -123,6 +138,11 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                     listener.onItemClick(data.getDocument());
                 }
+            });
+
+            itemView.setOnLongClickListener(view -> {
+                listener.onItemLongClick(data.getDocument());
+                return true; // Return true to indicate the event was handled
             });
         }
     }

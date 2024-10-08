@@ -6,7 +6,7 @@
             <corners
                 android:radius="10dp" />
             <solid
-                android:color="@color/themeLight" />
+                android:color="@color/theme" />
         </shape>
     </item>
 </layer-list>

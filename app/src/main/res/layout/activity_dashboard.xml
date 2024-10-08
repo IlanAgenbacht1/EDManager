@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.Dashboard"
-    android:padding="15dp"
+    android:padding="8dp"
     android:background="@color/pearl">
 
-    <Button
+    <!--<Button
         android:id="@+id/buttonCreateTrip"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -18,7 +18,26 @@
         android:textColor="@color/gold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" /> <!-- Ensure fixed size on the left -->
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/> --><!-- Ensure fixed size on the left -->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCreateTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:visibility="invisible"
+        app:backgroundTint="@color/pearl"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@color/theme"
+        app:srcCompat="@drawable/custom_plus"
+        app:tint="@color/theme"
+        app:elevation="10dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/customButtonDelete"
@@ -49,8 +68,7 @@
         android:id="@+id/recyclerViewLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonCreateTrip"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -59,8 +77,9 @@
             android:id="@+id/recyclerViewDashboardMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
             android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

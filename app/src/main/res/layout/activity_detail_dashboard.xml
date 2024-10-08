@@ -9,6 +9,22 @@
     android:padding="15dp"
     tools:context=".activity.DetailDashboard">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        app:backgroundTint="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/dashboard_delete"
+        app:tint="@color/pearl"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:visibility="invisible"/>
+
     <TextView
         android:id="@+id/textViewDetailTripLabel"
         android:layout_width="wrap_content"
@@ -33,6 +49,7 @@
             android:id="@+id/dashboardDetailRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
