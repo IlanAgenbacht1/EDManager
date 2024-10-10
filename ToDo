@@ -2,9 +2,8 @@ FUNCTIONALITY
 
 - Delete or update delivery.
 
-- Enable or deploy a trip which would prevent a user from editing a trip or its deliveries. Would require a DRAFTED folder in Dropbox. Once trip is deployed its moved out of said folder.
+- Enable or deploy a trip which would prevent a user from editing a trip or its deliveries. Will need to alter the dropbox setup.
 
 UI
 
-- Find spot for logo
-
+- Cleaner handling of long clicks.
