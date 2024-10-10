@@ -11,13 +11,19 @@ public class Constant {
     public static String company = "";
     public static String trip = "";
 
+    public static String adapterRemoveInProgressTrip = "";
+    public static String adapterRemoveStagingTrip = "";
+
     public static DeliveryModel deliveryData;
 
     public static ArrayList<String> listParcels = new ArrayList<>();
     public static ArrayList<String> listTrips = new ArrayList<>();
     public static ArrayList<String> listConfiguredTrips = new ArrayList<>();
     public static ArrayList<String> listInProgressTrips = new ArrayList<>();
+    public static ArrayList<String> adapterInProgressTrips = new ArrayList<>();
     public static ArrayList<String> listCompletedTrips = new ArrayList<>();
+    public static ArrayList<String> listStagingTrips = new ArrayList<>();
+    public static ArrayList<String> adapterStagingTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteDeliveries = new ArrayList<>();
 
@@ -28,6 +34,7 @@ public class Constant {
     public static boolean deliveryHighlightedForDelete;
     public static boolean tripDeleteMode;
     public static boolean deliveryDeleteMode;
+    public static boolean tripStaging;
 
     public static Address address;
 

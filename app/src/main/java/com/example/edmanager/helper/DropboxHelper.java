@@ -31,6 +31,7 @@ public class DropboxHelper {
     private static final String DROPBOX_CUSTOMER_PATH = "/Customers/";
     private static final String DROPBOX_IN_PROGRESS_PATH = "/InProgress/";
     private static final String DROPBOX_COMPLETED_PATH = "/Completed/";
+    private static final String DROPBOX_STAGING_PATH = "/Staging/";
     private static final String LOCAL_IMAGE_PATH = "/DeliveryApp/DeliveryImage/";
     private static final String LOCAL_SIGNATURE_PATH = "/DeliveryApp/DeliverySignature/";
 
@@ -60,7 +61,7 @@ public class DropboxHelper {
 
                     try (InputStream inputStream = new FileInputStream(new File(file.getPath()))) {
 
-                        getClient().files().uploadBuilder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/" + file.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
+                        getClient().files().uploadBuilder(DROPBOX_CUSTOMER_PATH  + Constant.company + DROPBOX_STAGING_PATH + file.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
 
                         ToastLogger.message(context, "Uploaded file " + file.getName());
                     }
@@ -84,7 +85,7 @@ public class DropboxHelper {
 
         try {
 
-            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH  + Constant.company + DROPBOX_STAGING_PATH);
 
         } catch (DbxException e) {
 
@@ -153,6 +154,18 @@ public class DropboxHelper {
                 }
             }
 
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH);
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String resultItem = result.getEntries().get(i).getName();
+
+                if (resultItem.contains(".json")) {
+
+                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH);
+                }
+            }
+
             result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
 
             for (int i = 0; i < result.getEntries().size(); i++) {
@@ -210,6 +223,22 @@ public class DropboxHelper {
                 }
             }
 
+            result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH);
+
+            for (int i = 0; i < result.getEntries().size(); i++) {
+
+                String item = result.getEntries().get(i).getName();
+
+                item = item.substring(0, item.length() - 5);
+
+                if (item.equals(trip)) {
+
+                    //Log.i("SYNC",  trip + " completed");
+
+                    return 3;
+                }
+            }
+
             result = getClient().files().listFolder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + trip + "/");
 
             for (int i = 0; i < result.getEntries().size(); i++) {
@@ -230,8 +259,6 @@ public class DropboxHelper {
             }
 
         } catch (ListFolderErrorException e) {
-
-            Log.i("SYNC", trip + " not completed");
 
             return 2;
 
@@ -254,6 +281,18 @@ public class DropboxHelper {
         } catch (Exception e) {
 
 
+        }
+    }
+
+
+    public static void deployTrip(String trip) {
+        try{
+
+            getClient().files().moveV2(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH + trip + ".json", DROPBOX_CUSTOMER_PATH + Constant.company + "/" + trip + ".json");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
     }
 

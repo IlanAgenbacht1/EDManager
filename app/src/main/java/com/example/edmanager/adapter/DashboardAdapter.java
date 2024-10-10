@@ -60,6 +60,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        Log.i("SYNC", (position + 1) + " holder binded");
+
         int deliveryCount = JsonHelper.returnDeliveryCount(context, listTrips.get(position));
 
         holder.bind(listTrips.get(position), deliveryCount, listener);
@@ -88,6 +90,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
         }
 
         public void bind(final String tripName, final int deliveryCount, OnItemClickListener listener) {
+            Log.i("SYNC", "adapter binded " + tripName);
             // Set the foreground based on trip status
             if (Constant.listDeleteTrips.contains(tripName)) {
                 itemView.setForeground(itemView.getResources().getDrawable(R.drawable.border_dashboard_status_inprogress, null));
@@ -109,15 +112,51 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
 
             // Set trip status
             if (Constant.listInProgressTrips.contains(tripName)) {
+
                 textViewStatus.setVisibility(View.VISIBLE);
                 textViewStatus.setText("In Progress");
                 textViewStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.gold));
+
+                Constant.adapterInProgressTrips.add(tripName);
+
+                if (Constant.adapterRemoveInProgressTrip.equals(tripName)) {
+
+                    textViewStatus.setVisibility(View.INVISIBLE);
+
+                    Constant.listInProgressTrips.remove(tripName);
+                    Constant.adapterInProgressTrips.remove(tripName);
+
+                    Constant.adapterRemoveInProgressTrip = "";
+                }
+
             } else if (Constant.listCompletedTrips.contains(tripName)) {
                 textViewStatus.setVisibility(View.VISIBLE);
                 textViewStatus.setText("Completed");
                 textViewStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));
+
+                Log.i("SYNC", tripName + "adapter completed");
+
+            } else if (Constant.listStagingTrips.contains(tripName)) {
+                textViewStatus.setVisibility(View.VISIBLE);
+                textViewStatus.setText("Staging");
+                textViewStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.pearl));
+
+                Constant.adapterStagingTrips.add(tripName);
+
+                if (Constant.adapterRemoveStagingTrip.equals(tripName)) {
+
+                    textViewStatus.setVisibility(View.INVISIBLE);
+
+                    Constant.listStagingTrips.remove(tripName);
+                    Constant.adapterStagingTrips.remove(tripName);
+
+                    Constant.adapterRemoveStagingTrip = "";
+                }
+
             } else if (Constant.listConfiguredTrips.contains(tripName)) {
                 textViewStatus.setVisibility(View.INVISIBLE);
+
+                Log.i("SYNC", tripName + "adapter open");
             } else {
                 textViewStatus.setVisibility(View.GONE); // In case none of the conditions are met
             }

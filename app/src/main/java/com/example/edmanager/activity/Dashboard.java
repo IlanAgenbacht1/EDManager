@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,7 @@ public class Dashboard extends AppCompatActivity {
     Button buttonCreateTrip;
     ConstraintLayout buttonDeleteTrip, constraintLayout;
     EditText tripEditText;
+    TextView textViewStatus;
 
     FloatingActionButton fabCreateTrip;
 
@@ -54,7 +56,6 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        //buttonCreateTrip = findViewById(R.id.buttonCreateTrip);
         buttonDeleteTrip = findViewById(R.id.customButtonDelete);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
         constraintLayout = findViewById(R.id.dashboardLayout);
@@ -81,6 +82,15 @@ public class Dashboard extends AppCompatActivity {
                             ToastLogger.message(getApplicationContext(), "Trip in progress.");
 
                         } else {
+
+                            if (Constant.listStagingTrips.contains(tripNumber)) {
+
+                                Constant.tripStaging = true;
+
+                            } else {
+
+                                Constant.tripStaging = false;
+                            }
 
                             Constant.trip = tripNumber;
                             Constant.deliveryCount = JsonHelper.returnDeliveryCount(getApplicationContext(), tripNumber);
@@ -372,78 +382,58 @@ public class Dashboard extends AppCompatActivity {
 
 
     public void updateStatus() {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                ArrayList<String> listTripsCopy = new ArrayList<>(Constant.listTrips);
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+                for (String trip : listTripsCopy) {
+                    int status = DropboxHelper.returnTripStatus(trip);
 
-                while (true) {
-
-                    ArrayList<String> listTripsCopy = new ArrayList<>();
-
-                    listTripsCopy.addAll(Constant.listTrips);
-
-                    for (String trip : listTripsCopy) {
-
-                        int status = DropboxHelper.returnTripStatus(trip);
-
-                        if (status == 1) {
-
-                            if (!Constant.listCompletedTrips.contains(trip)) {
-
-                                Constant.listCompletedTrips.add(trip);
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
-
-                                        Log.i("SYNC", trip + " completed");
-                                    }
-                                });
-                            }
-
-                        } else if (status == 0) {
-
-                            if (!Constant.listInProgressTrips.contains(trip)) {
-
-                                Constant.listInProgressTrips.add(trip);
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
-
-                                        Log.i("SYNC", trip + " in progress");
-                                    }
-                                });
-                            }
-
-                        } else if (status == 2) {
-
-                            if (Constant.listInProgressTrips.contains(trip)) {
-
-                                Constant.listInProgressTrips.remove(trip);
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        adapter.notifyItemChanged(Constant.listTrips.indexOf(trip));
-
-                                        Log.i("SYNC", trip + " open");
-                                    }
-                                });
-                            }
+                    if (status == 1 && !Constant.listCompletedTrips.contains(trip)) {
+                        Constant.listCompletedTrips.add(trip);
+                        updateAdapter(trip);
+                    } else if (status == 0 && !Constant.adapterInProgressTrips.contains(trip)) {
+                        if (!Constant.listInProgressTrips.contains(trip)) {
+                            Constant.listInProgressTrips.add(trip);
                         }
+                        updateAdapter(trip);
+                    } else if (status == 2) {
+                        if (Constant.listInProgressTrips.contains(trip)) {
+                            Constant.adapterRemoveInProgressTrip = trip;
+                            updateAdapter(trip);
+                        } else if (Constant.listStagingTrips.contains(trip)) {
+                            Constant.adapterRemoveStagingTrip = trip;
+                            updateAdapter(trip);
+                        }
+                    } else if (status == 3 && !Constant.adapterStagingTrips.contains(trip)) {
+                        if (!Constant.listStagingTrips.contains(trip)) {
+                            Constant.listStagingTrips.add(trip);
+                        }
+                        updateAdapter(trip);
                     }
+                }
+
+                // Sleep to avoid overwhelming the UI thread
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         });
-
         thread.start();
+    }
+
+    private void updateAdapter(String trip) {
+        runOnUiThread(() -> {
+            int position = Constant.listTrips.indexOf(trip);
+            if (position != -1) {
+                adapter.notifyItemChanged(position);
+                Log.i("SYNC", "Updated " + trip + " at position " + position);
+            } else {
+                Log.w("SYNC", "Trip not found in list: " + trip);
+            }
+        });
     }
 
 

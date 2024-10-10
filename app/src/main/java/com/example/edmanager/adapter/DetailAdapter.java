@@ -40,7 +40,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == 1) {
+        if (viewType == 1 && Constant.tripStaging) {
 
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_add_button, parent, false);
 
@@ -88,7 +88,14 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemCount() {
 
-        return listDeliveries.size() + 1;
+        if (Constant.tripStaging) {
+
+            return listDeliveries.size() + 1;
+
+        } else {
+
+            return listDeliveries.size();
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
