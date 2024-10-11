@@ -124,7 +124,7 @@ public class DropboxHelper {
 
                 if (dropboxDirectory == null) {
 
-                    getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH + Constant.company + "/" + tripName + ".json").download(outputStream);
+                    getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH + tripName + ".json").download(outputStream);
 
                 } else {
 
