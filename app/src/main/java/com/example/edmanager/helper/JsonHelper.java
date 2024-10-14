@@ -227,4 +227,37 @@ public class JsonHelper {
         }
     }
 
+
+    public static void removeDelivery(Context context, String trip, DeliveryModel delivery) {
+        try {
+
+            JSONObject json = readFile(context, trip);
+            JSONArray jsonArray = json.getJSONArray("stops");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+                JSONObject jsonData = jsonArray.getJSONObject(i);
+
+                if (jsonData.getString("documentNumber").equals(delivery.getDocument())) {
+
+                    jsonArray.remove(i);
+                }
+            }
+
+            JSONObject jsonFinal = new JSONObject();
+
+            jsonFinal.put("stops", jsonArray);
+
+            File file = new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/" + trip + ".json");
+
+            Writer writer = new BufferedWriter(new FileWriter(file));
+            writer.write(jsonFinal.toString(4));
+            writer.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -61,6 +61,7 @@ public class Dashboard extends AppCompatActivity {
         constraintLayout = findViewById(R.id.dashboardLayout);
         fabCreateTrip = findViewById(R.id.fabCreateTrip);
 
+        localTrips = null;
         Constant.listDeleteTrips = new ArrayList<>();
         deleteModeAnimated = false;
         //originalEndMargin = ((ConstraintLayout.LayoutParams) buttonCreateTrip.getLayoutParams()).rightMargin;

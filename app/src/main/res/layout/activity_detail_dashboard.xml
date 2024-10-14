@@ -10,36 +10,37 @@
     tools:context=".activity.DetailDashboard">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:clickable="true"
-        app:backgroundTint="@color/red"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/dashboard_delete"
-        app:tint="@color/pearl"
-        android:scaleX="0"
-        android:scaleY="0"
-        android:visibility="invisible"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabDeploy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:clickable="true"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:visibility="invisible"
         app:backgroundTint="@color/gold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/icon_deploy"
-        app:tint="@color/theme"
+        app:tint="@color/theme" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDelete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
         android:scaleX="0"
         android:scaleY="0"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        app:backgroundTint="@color/red"
+        app:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/dashboard_delete"
+        app:tint="@color/pearl" />
 
     <TextView
         android:id="@+id/textViewDetailTripLabel"
@@ -64,7 +65,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dashboardDetailRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="103dp"
+            tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

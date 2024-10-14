@@ -150,7 +150,7 @@ public class DropboxHelper {
 
                 if (resultItem.contains(".json")) {
 
-                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5), null);
+                    downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
                 }
             }
 

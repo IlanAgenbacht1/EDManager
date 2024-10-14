@@ -1,6 +1,7 @@
 package com.example.edmanager.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface OnItemClickListener {
         void onItemClick(String item);
-        void onItemLongClick(String deliveryNumber);
+        void onItemLongClick(String deliveryNumber, int position);
     }
 
     @NonNull
@@ -119,6 +120,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         public void bind(final DeliveryModel data, final OnItemClickListener listener) {
+            Log.i("UI", "DetailAdapter binded " + data.getDocument());
 
             if (Constant.listDeleteDeliveries.contains(data.getDocument())) {
 
@@ -148,7 +150,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             });
 
             itemView.setOnLongClickListener(view -> {
-                listener.onItemLongClick(data.getDocument());
+                listener.onItemLongClick(data.getDocument(), getAdapterPosition());
                 return true; // Return true to indicate the event was handled
             });
         }
