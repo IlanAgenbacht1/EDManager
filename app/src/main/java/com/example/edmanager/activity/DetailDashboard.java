@@ -38,9 +38,8 @@ public class DetailDashboard extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DetailAdapter detailAdapter;
     private TextView textViewTrip;
-    private FloatingActionButton fabDelete, fabDeploy;
-
-    private Database database;
+    private FloatingActionButton fabDelete, fabDeploy, fabEdit;
+    private int editAdapterPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class DetailDashboard extends AppCompatActivity {
         textViewTrip = findViewById(R.id.textViewDetailTripLabel);
         fabDelete = findViewById(R.id.fabDelete);
         fabDeploy = findViewById(R.id.fabDeploy);
+        fabEdit = findViewById(R.id.fabEdit);
 
         Constant.listDeleteDeliveries = new ArrayList<>();
         listDeliveries = JsonHelper.returnListDeliveryData(getApplicationContext(), Constant.trip);
@@ -74,17 +74,6 @@ public class DetailDashboard extends AppCompatActivity {
             @Override
             public void onItemLongClick(String deliveryNumber, int position) {
 
-                /*int position = -1;
-
-                for (int i = 0; i < listDeliveries.size(); i++) {
-
-                    DeliveryModel delivery = listDeliveries.get(i);
-
-                    if (delivery.getDocument().equals(deliveryNumber)) {
-                        position = i;
-                    }
-                }*/
-
                 if (Constant.tripStaging && !Constant.listDeleteDeliveries.contains(deliveryNumber)) {
 
                     Constant.listDeleteDeliveries.add(deliveryNumber);
@@ -98,6 +87,49 @@ public class DetailDashboard extends AppCompatActivity {
                     animatorSet.playTogether(scaleX, scaleY);
                     animatorSet.setDuration(200); // animation duration in milliseconds
                     animatorSet.start();
+
+                    ObjectAnimator scaleX3 = ObjectAnimator.ofFloat(fabDeploy, "scaleX", 0f);
+                    ObjectAnimator scaleY3 = ObjectAnimator.ofFloat(fabDeploy, "scaleY", 0f);
+                    AnimatorSet animatorSet3 = new AnimatorSet();
+                    animatorSet3.playTogether(scaleX3, scaleY3);
+                    animatorSet3.setDuration(200); // animation duration in milliseconds
+
+                    animatorSet3.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            fabDeploy.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                        }
+                    });
+
+                    animatorSet3.start();
+
+                    if (Constant.listDeleteDeliveries.size() > 1) {
+
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabEdit, "scaleX", 0f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabEdit, "scaleY", 0f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
+
+                        animatorSet2.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                fabEdit.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                            }
+                        });
+
+                        animatorSet2.start();
+
+                    } else {
+
+                        fabEdit.setVisibility(View.VISIBLE);
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabEdit, "scaleX", 1f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabEdit, "scaleY", 1f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
+                        animatorSet2.start();
+                    }
 
                 } else if (Constant.tripStaging && Constant.listDeleteDeliveries.contains(deliveryNumber)) {
 
@@ -121,6 +153,41 @@ public class DetailDashboard extends AppCompatActivity {
                         });
 
                         animatorSet.start();
+
+                        ObjectAnimator scaleX3 = ObjectAnimator.ofFloat(fabEdit, "scaleX", 0f);
+                        ObjectAnimator scaleY3 = ObjectAnimator.ofFloat(fabEdit, "scaleY", 0f);
+                        AnimatorSet animatorSet3 = new AnimatorSet();
+                        animatorSet3.playTogether(scaleX3, scaleY3);
+                        animatorSet3.setDuration(200); // animation duration in milliseconds
+
+                        animatorSet3.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                fabEdit.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                            }
+                        });
+
+                        animatorSet3.start();
+
+                        fabDeploy.setVisibility(View.VISIBLE);
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabDeploy, "scaleX", 1f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabDeploy, "scaleY", 1f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
+
+                        animatorSet2.start();
+
+                    } else if (Constant.listDeleteDeliveries.size() == 1) {
+
+                        fabEdit.setVisibility(View.VISIBLE);
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabEdit, "scaleX", 1f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabEdit, "scaleY", 1f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
+
+                        animatorSet2.start();
                     }
                 }
             }
@@ -236,6 +303,30 @@ public class DetailDashboard extends AppCompatActivity {
                 }
 
                 DropboxHelper.uploadFile(getApplicationContext(), new File(getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/" + Constant.trip + ".json"));
+            }
+        });
+
+        fabEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Constant.deliveryEdit = true;
+                
+                int position = 0;
+
+                for (int i = 0; i < listDeliveries.size(); i++) {
+
+                    if (listDeliveries.get(i).getDocument().equals(Constant.listDeleteDeliveries.get(0))) {
+
+                        position = i;
+                    }
+                }
+
+                Constant.deliveryData = listDeliveries.get(position);
+
+                startActivity(new Intent(DetailDashboard.this, NewDeliveryHeader.class));
+
+                finish();
             }
         });
 

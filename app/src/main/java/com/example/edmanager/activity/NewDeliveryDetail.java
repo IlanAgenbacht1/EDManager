@@ -30,9 +30,9 @@ public class NewDeliveryDetail extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ParcelAdapter adapter;
-
     private Button buttonAddParcel, buttonCreateDelivery;
     private EditText editTextParcel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,16 @@ public class NewDeliveryDetail extends AppCompatActivity {
                     Constant.deliveryData.setNumberOfParcels(Constant.listParcels.size());
                     Constant.deliveryData.setParcelNumbers(Constant.listParcels);
 
-                    uploadDelivery();
+                    if (Constant.deliveryEdit) {
+
+                        JsonHelper.removeDelivery(getApplicationContext(), Constant.trip, Constant.deliveryData);
+
+                        uploadDelivery();
+
+                    } else {
+
+                        uploadDelivery();
+                    }
 
                 } else {
 
@@ -134,7 +143,10 @@ public class NewDeliveryDetail extends AppCompatActivity {
 
                 } else {
 
-                    DropboxHelper.downloadFile(getApplicationContext(), Constant.deliveryData.getTripId(), null);
+                    if (!Constant.deliveryEdit) {
+
+                        DropboxHelper.downloadFile(getApplicationContext(), Constant.deliveryData.getTripId(), null);
+                    }
 
                     File file = JsonHelper.createOrAppendTrip(getApplicationContext(), Constant.deliveryData, Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/");
 

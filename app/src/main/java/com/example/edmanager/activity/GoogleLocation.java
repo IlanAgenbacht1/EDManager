@@ -93,6 +93,7 @@ public class GoogleLocation extends FragmentActivity implements OnMapReadyCallba
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 return false;
             }
         });
@@ -101,6 +102,7 @@ public class GoogleLocation extends FragmentActivity implements OnMapReadyCallba
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (address != null) {
 
                     Constant.address = address;

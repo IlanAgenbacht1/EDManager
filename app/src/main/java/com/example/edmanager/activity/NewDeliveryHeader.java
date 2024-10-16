@@ -55,10 +55,28 @@ public class NewDeliveryHeader extends AppCompatActivity {
         editTextContactNumber = findViewById(R.id.NewDelivery_editTextContactNumber);
         editTextDocument = findViewById(R.id.NewDelivery_editTextDocument);
 
-
         Constant.address = null;
 
-        Constant.deliveryData = new DeliveryModel();
+        if (!Constant.deliveryEdit) {
+
+            Constant.deliveryData = new DeliveryModel();
+
+        } else {
+
+            editTextCompanyName.setText(Constant.deliveryData.getCustomerName());
+            editTextContactName.setText(Constant.deliveryData.getContactName());
+            editTextContactNumber.setText(Constant.deliveryData.getContactNumber());
+            editTextDocument.setText(Constant.deliveryData.getDocument());
+            editTextDocument.setFocusable(false);
+            editTextDocument.setClickable(false);
+            textViewAddress.setText("Address saved");
+            buttonFindAddress.setText("Change Address");
+
+            for (String parcel : Constant.deliveryData.getParcelNumbers()) {
+
+                Constant.listParcels.add(parcel);
+            }
+        }
 
         textViewTrip.setText(Constant.trip);
 
@@ -80,12 +98,18 @@ public class NewDeliveryHeader extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Location location = new Location("");
-                location.setLatitude(Constant.address.getLatitude());
-                location.setLongitude(Constant.address.getLongitude());
+                if (Constant.address != null) {
 
-                Constant.deliveryData.setLocation(location);
-                Constant.deliveryData.setAddress(Constant.address.getAddressLine(0));
+                    Location location = new Location("");
+
+                    location.setLatitude(Constant.address.getLatitude());
+                    location.setLongitude(Constant.address.getLongitude());
+
+                    Constant.deliveryData.setLocation(location);
+                    Constant.deliveryData.setAddress(Constant.address.getAddressLine(0));
+                }
+
+
                 Constant.deliveryData.setCustomerName(editTextCompanyName.getText().toString());
                 Constant.deliveryData.setContactName(editTextContactName.getText().toString());
                 Constant.deliveryData.setContactNumber(editTextContactNumber.getText().toString());

@@ -15,6 +15,7 @@ public class Constant {
     public static String adapterRemoveStagingTrip = "";
 
     public static DeliveryModel deliveryData;
+    public static DeliveryModel oldDeliveryData;
 
     public static ArrayList<String> listParcels = new ArrayList<>();
     public static ArrayList<String> listTrips = new ArrayList<>();
@@ -35,6 +36,7 @@ public class Constant {
     public static boolean tripDeleteMode;
     public static boolean deliveryDeleteMode;
     public static boolean tripStaging;
+    public static boolean deliveryEdit;
 
     public static Address address;
 
