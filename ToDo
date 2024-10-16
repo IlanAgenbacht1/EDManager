@@ -1,8 +1,8 @@
 FUNCTIONALITY
 
-- Delete or update delivery.
+- Edit deliveries.
 
-- Enable or deploy a trip which would prevent a user from editing a trip or its deliveries. Will need to alter the dropbox setup.
+- Validate client when logging in.
 
 UI
 
