@@ -25,44 +25,37 @@
         android:id="@+id/fabCreateTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:clickable="true"
         android:scaleX="0"
         android:scaleY="0"
         android:visibility="invisible"
         app:backgroundTint="@color/pearl"
+        app:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/theme"
         app:srcCompat="@drawable/custom_plus"
-        app:tint="@color/theme"
-        app:elevation="10dp"/>
+        app:tint="@color/theme" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/customButtonDelete"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDeleteTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_ripple_border_delete"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:clickable="true"
-        android:focusable="true"
+        android:scaleX="0"
+        android:scaleY="0"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonCreateTrip"
+        app:backgroundTint="@color/red"
+        app:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonCreateTrip">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleX="0.5"
-            android:scaleY="0.5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/dashboard_delete" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:rippleColor="@color/pearl"
+        app:srcCompat="@drawable/dashboard_delete"
+        app:tint="@color/pearl" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recyclerViewLayout"

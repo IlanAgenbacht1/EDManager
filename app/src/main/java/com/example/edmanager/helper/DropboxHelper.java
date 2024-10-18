@@ -272,16 +272,30 @@ public class DropboxHelper {
 
 
     public static void deleteFile(String trip) {
-        try {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-            getClient().files().deleteV2(DROPBOX_CUSTOMER_PATH + Constant.company + "/" + trip + ".json");
+                    if (Constant.listStagingTrips.contains(trip)) {
 
-            Log.i("SYNC", trip + " deleted.");
+                        getClient().files().deleteV2(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH + trip + ".json");
 
-        } catch (Exception e) {
+                    } else {
 
+                        getClient().files().deleteV2(DROPBOX_CUSTOMER_PATH + Constant.company + "/" + trip + ".json");
+                    }
 
-        }
+                    Log.i("SYNC", trip + " deleted.");
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
     }
 
 

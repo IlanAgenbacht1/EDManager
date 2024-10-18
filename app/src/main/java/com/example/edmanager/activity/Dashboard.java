@@ -1,5 +1,7 @@
 package com.example.edmanager.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -40,7 +42,7 @@ public class Dashboard extends AppCompatActivity {
     EditText tripEditText;
     TextView textViewStatus;
 
-    FloatingActionButton fabCreateTrip;
+    FloatingActionButton fabCreateTrip, fabDelete;
 
     DashboardAdapter adapter;
     RecyclerView recyclerView;
@@ -56,15 +58,13 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        buttonDeleteTrip = findViewById(R.id.customButtonDelete);
         recyclerView = findViewById(R.id.recyclerViewDashboardMain);
         constraintLayout = findViewById(R.id.dashboardLayout);
         fabCreateTrip = findViewById(R.id.fabCreateTrip);
+        fabDelete = findViewById(R.id.fabDeleteTrip);
 
         localTrips = null;
         Constant.listDeleteTrips = new ArrayList<>();
-        deleteModeAnimated = false;
-        //originalEndMargin = ((ConstraintLayout.LayoutParams) buttonCreateTrip.getLayoutParams()).rightMargin;
 
         adapter = new DashboardAdapter(Constant.listTrips, getApplicationContext(), new DashboardAdapter.OnItemClickListener() {
             @Override
@@ -103,38 +103,13 @@ public class Dashboard extends AppCompatActivity {
 
                     } else {
 
-                        AlertDialog dialog = new AlertDialog.Builder(Dashboard.this, R.style.AlertDialogStyle).create();
+                        Constant.trip = tripNumber;
+                        Constant.tripStaging = true;
+                        Constant.listParcels = new ArrayList<>();
 
-                        dialog.setTitle("Delete Empty Trip/Add Delivery");
+                        startActivity(new Intent(Dashboard.this, DetailDashboard.class));
 
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add Delivery", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                Constant.trip = tripNumber;
-                                Constant.listParcels = new ArrayList<>();
-
-                                startActivity(new Intent(Dashboard.this, NewDeliveryHeader.class));
-
-                                finish();
-                            }
-                        });
-
-                        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Delete Trip", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                //database.deleteTrip(tripNumber);
-
-                                //listTrips.remove(tripNumber);
-
-                                adapter.notifyDataSetChanged();
-
-                                dialog.cancel();
-                            }
-                        });
-
-                        dialog.show();
+                        finish();
                     }
 
                 } else {
@@ -221,7 +196,7 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
-        buttonDeleteTrip.setOnClickListener(new View.OnClickListener() {
+        fabDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -229,47 +204,40 @@ public class Dashboard extends AppCompatActivity {
 
                     FileHelper.deleteFile(getApplicationContext(), tripName);
 
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
+                    Constant.listDeleteTrips.remove(tripName);
 
-                            DropboxHelper.deleteFile(tripName);
+                    adapter.notifyItemRemoved(Constant.listTrips.indexOf(tripName));
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                    Constant.listTrips.remove(tripName);
+                    Constant.listConfiguredTrips.remove(tripName);
 
-                                    int position = Constant.listTrips.indexOf(tripName);
+                    if (Constant.listDeleteTrips.isEmpty()) {
 
-                                    Constant.listDeleteTrips.remove(tripName);
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabDelete, "scaleX", 0f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabDelete, "scaleY", 0f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
 
-                                    adapter.notifyItemRemoved(position);
+                        animatorSet2.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                fabDelete.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                                fabCreateTrip.setVisibility(View.VISIBLE);
+                                ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
+                                ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
+                                AnimatorSet animatorSet2 = new AnimatorSet();
+                                animatorSet2.playTogether(scaleX2, scaleY2);
+                                animatorSet2.setDuration(200);
 
-                                    Constant.listTrips.remove(tripName);
-                                    Constant.listConfiguredTrips.remove(tripName);
+                                animatorSet2.start();
+                            }
+                        });
 
-                                    if (Constant.listDeleteTrips.size() < 1) {
+                        animatorSet2.start();
+                    }
 
-                                        ConstraintSet constraintSet = new ConstraintSet();
-                                        constraintSet.clone(constraintLayout);
-
-                                        // Apply new end margin
-                                        constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, originalEndMargin);
-
-                                        TransitionManager.beginDelayedTransition(constraintLayout);
-                                        constraintSet.applyTo(constraintLayout);
-
-                                        buttonDeleteTrip.setVisibility(View.INVISIBLE);
-
-                                        deleteModeAnimated = false;
-                                        Constant.tripDeleteMode = false;
-                                    }
-                                }
-                            });
-                        }
-                    });
-
-                    thread.start();
+                    DropboxHelper.deleteFile(tripName);
                 }
             }
         });
@@ -446,27 +414,68 @@ public class Dashboard extends AppCompatActivity {
 
             Constant.listDeleteTrips.remove(tripNumber);
 
-            Constant.tripDeleteMode = true;
-
             adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
 
-            if (Constant.listDeleteTrips.size() < 1) {
+            if (Constant.listDeleteTrips.isEmpty()) {
 
-                deleteModeAnimated = false;
-                Constant.tripDeleteMode = false;
+                ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabDelete, "scaleX", 0f);
+                ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabDelete, "scaleY", 0f);
+                AnimatorSet animatorSet2 = new AnimatorSet();
+                animatorSet2.playTogether(scaleX2, scaleY2);
+                animatorSet2.setDuration(200); // animation duration in milliseconds
+
+                animatorSet2.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        fabDelete.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                        fabCreateTrip.setVisibility(View.VISIBLE);
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200);
+
+                        animatorSet2.start();
+                    }
+                });
+
+                animatorSet2.start();
             }
 
         } else {
 
-            Constant.listDeleteTrips.add(tripNumber);
+            if (!Constant.listInProgressTrips.contains(tripNumber) && !Constant.listCompletedTrips.contains(tripNumber)) {
 
-            Constant.tripDeleteMode = true;
+                Constant.listDeleteTrips.add(tripNumber);
 
-            adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
+                adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
 
-            if (!deleteModeAnimated) {
+                if (Constant.listDeleteTrips.size() == 1) {
 
-                deleteModeAnimated = true;
+                    ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 0f);
+                    ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 0f);
+                    AnimatorSet animatorSet2 = new AnimatorSet();
+                    animatorSet2.playTogether(scaleX2, scaleY2);
+                    animatorSet2.setDuration(200); // animation duration in milliseconds
+
+                    animatorSet2.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            fabCreateTrip.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                            fabDelete.setVisibility(View.VISIBLE);
+                            ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabDelete, "scaleX", 1f);
+                            ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabDelete, "scaleY", 1f);
+                            AnimatorSet animatorSet2 = new AnimatorSet();
+                            animatorSet2.playTogether(scaleX2, scaleY2);
+                            animatorSet2.setDuration(200);
+
+                            animatorSet2.start();
+                        }
+                    });
+
+                    animatorSet2.start();
+                }
+
             }
         }
     }

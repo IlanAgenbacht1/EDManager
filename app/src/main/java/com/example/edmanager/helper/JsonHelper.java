@@ -109,6 +109,7 @@ public class JsonHelper {
 
             JSONObject tripData;
 
+
             try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/" + trip + ".json")))) {
 
                 String line;
@@ -222,9 +223,9 @@ public class JsonHelper {
         } catch (Exception e) {
 
             e.printStackTrace();
-
-            return null;
         }
+
+        return new ArrayList<>();
     }
 
 

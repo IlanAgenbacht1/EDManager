@@ -91,10 +91,14 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
 
         public void bind(final String tripName, final int deliveryCount, OnItemClickListener listener) {
             Log.i("SYNC", "adapter binded " + tripName);
+
             // Set the foreground based on trip status
             if (Constant.listDeleteTrips.contains(tripName)) {
+
                 itemView.setForeground(itemView.getResources().getDrawable(R.drawable.border_dashboard_status_inprogress, null));
+
             } else {
+
                 TypedValue typedValue = new TypedValue();
                 Context context = itemView.getContext();
                 context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
@@ -154,10 +158,13 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                 }
 
             } else if (Constant.listConfiguredTrips.contains(tripName)) {
+
                 textViewStatus.setVisibility(View.INVISIBLE);
 
                 Log.i("SYNC", tripName + "adapter open");
+
             } else {
+
                 textViewStatus.setVisibility(View.GONE); // In case none of the conditions are met
             }
 

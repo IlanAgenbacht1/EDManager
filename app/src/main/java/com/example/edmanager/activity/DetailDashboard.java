@@ -334,7 +334,7 @@ public class DetailDashboard extends AppCompatActivity {
 
         textViewTrip.setText("SHOWING DELIVERIES FOR " + Constant.trip);
 
-        if (Constant.tripStaging && listDeliveries.size() > 0) {
+        if (Constant.tripStaging && listDeliveries != null && !listDeliveries.isEmpty()) {
 
             fabDeploy.setVisibility(View.VISIBLE);
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabDeploy, "scaleX", 1f);
@@ -346,62 +346,6 @@ public class DetailDashboard extends AppCompatActivity {
             animatorSet.start();
         }
     }
-
-
-    /*public void runDeleteMode(String tripNumber) {
-
-        Constant.tripHighlightedForDelete = true;
-
-        if (Constant.listDeleteTrips.contains(tripNumber)) {
-
-            Constant.listDeleteTrips.remove(tripNumber);
-
-            Constant.tripDeleteMode = true;
-
-            adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
-
-            if (Constant.listDeleteTrips.size() < 1) {
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-
-                // Apply new end margin
-                constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, originalEndMargin);
-
-                TransitionManager.beginDelayedTransition(constraintLayout);
-                constraintSet.applyTo(constraintLayout);
-
-                buttonDeleteTrip.setVisibility(View.INVISIBLE);
-
-                deleteModeAnimated = false;
-                Constant.tripDeleteMode = false;
-            }
-
-        } else {
-
-            Constant.listDeleteTrips.add(tripNumber);
-
-            Constant.tripDeleteMode = true;
-
-            adapter.notifyItemChanged(Constant.listTrips.indexOf(tripNumber));
-
-            if (!deleteModeAnimated) {
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-
-                // Apply new end margin
-                constraintSet.setMargin(R.id.buttonCreateTrip, ConstraintSet.END, newEndMargin);
-
-                TransitionManager.beginDelayedTransition(constraintLayout);
-                constraintSet.applyTo(constraintLayout);
-
-                buttonDeleteTrip.setVisibility(View.VISIBLE);
-
-                deleteModeAnimated = true;
-            }
-        }
-    }*/
 
 
     @Override
