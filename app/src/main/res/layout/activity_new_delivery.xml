@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutNewDeliveryMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/pearl"
@@ -21,108 +22,119 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutAddress"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_trip_creation"
-        android:padding="20dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/NewDelivery_buttonNext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/NewDelivery_textViewTrip"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:text="Trip"
-            android:textColor="@color/pearl"
-            android:textSize="18sp"
+            android:background="@drawable/border_trip_creation"
+            android:padding="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/NewDelivery_buttonNext"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/NewDelivery_editTextDocument"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:ems="10"
-            android:hint="Delivery Number"
-            android:inputType="text"
-            android:textColor="@color/white"
-            android:textColorHint="@color/gold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/NewDelivery_textViewTrip" />
+            <TextView
+                android:id="@+id/NewDelivery_textViewTrip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:text="Trip"
+                android:textColor="@color/pearl"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/NewDelivery_textVIewAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="30dp"
-            android:text="Empty Address"
-            android:textColor="@color/gold"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextContactNumber" />
+            <EditText
+                android:id="@+id/NewDelivery_editTextDocument"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:ems="10"
+                android:hint="Delivery Number"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/gold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/NewDelivery_textViewTrip" />
 
-        <Button
-            android:id="@+id/NewDelivery_buttonFindAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@color/gold"
-            android:text="Add"
-            android:textColor="@color/theme"
-            app:layout_constraintStart_toStartOf="@+id/NewDelivery_textVIewAddress"
-            app:layout_constraintTop_toBottomOf="@+id/NewDelivery_textVIewAddress"
-            app:rippleColor="@color/pearl" />
+            <TextView
+                android:id="@+id/NewDelivery_textVIewAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="30dp"
+                android:text="Empty Address"
+                android:textColor="@color/gold"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextContactNumber" />
 
-        <EditText
-            android:id="@+id/NewDelivery_editTextCompanyName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:ems="10"
-            android:hint="Customer"
-            android:inputType="text|textCapCharacters"
-            android:text=""
-            android:textColor="@color/white"
-            android:textColorHint="@color/gold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextDocument" />
+            <Button
+                android:id="@+id/NewDelivery_buttonFindAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/gold"
+                android:text="Add"
+                android:textColor="@color/theme"
+                app:layout_constraintStart_toStartOf="@+id/NewDelivery_textVIewAddress"
+                app:layout_constraintTop_toBottomOf="@+id/NewDelivery_textVIewAddress"
+                app:rippleColor="@color/pearl" />
 
-        <EditText
-            android:id="@+id/NewDelivery_editTextContactName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:ems="10"
-            android:hint="Contact Name"
-            android:inputType="text"
-            android:text=""
-            android:textColor="@color/white"
-            android:textColorHint="@color/gold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextCompanyName" />
+            <EditText
+                android:id="@+id/NewDelivery_editTextCompanyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:hint="Customer"
+                android:inputType="text|textCapCharacters"
+                android:text=""
+                android:textColor="@color/white"
+                android:textColorHint="@color/gold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextDocument" />
 
-        <EditText
-            android:id="@+id/NewDelivery_editTextContactNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:ems="10"
-            android:hint="Contact Number"
-            android:inputType="text"
-            android:text=""
-            android:textColor="@color/white"
-            android:textColorHint="@color/gold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextContactName" />
+            <EditText
+                android:id="@+id/NewDelivery_editTextContactName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:hint="Contact Name"
+                android:inputType="text"
+                android:text=""
+                android:textColor="@color/white"
+                android:textColorHint="@color/gold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextCompanyName" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <EditText
+                android:id="@+id/NewDelivery_editTextContactNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:hint="Contact Number"
+                android:inputType="text"
+                android:text=""
+                android:textColor="@color/white"
+                android:textColorHint="@color/gold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/NewDelivery_editTextContactName" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/NewDelivery_buttonNext"

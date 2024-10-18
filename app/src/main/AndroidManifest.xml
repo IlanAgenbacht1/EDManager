@@ -22,7 +22,7 @@
         <activity
             android:name=".activity.NewDeliveryHeader"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.GoogleLocation"
             android:exported="false" />

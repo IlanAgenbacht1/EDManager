@@ -2,11 +2,13 @@ package com.example.edmanager.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +37,9 @@ public class NewDeliveryHeader extends AppCompatActivity {
     TextView textViewTrip, textViewAddress;
     EditText editTextDocument, editTextCompanyName, editTextContactName, editTextContactNumber;
     Button buttonAddDelivery, buttonFindAddress, buttonNext;
-    ConstraintLayout layoutMain, layoutAddress;
+    ConstraintLayout rootLayout, layoutAddress;
+
+    private boolean isKeyboardVisible = false;
 
 
     @Override
@@ -43,12 +47,13 @@ public class NewDeliveryHeader extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_delivery);
 
+
         textViewTrip = findViewById(R.id.NewDelivery_textViewTrip);
         buttonAddDelivery = findViewById(R.id.NewDelivery_buttonNext);
         textViewAddress = findViewById(R.id.NewDelivery_textVIewAddress);
         buttonFindAddress = findViewById(R.id.NewDelivery_buttonFindAddress);
         buttonNext = findViewById(R.id.NewDelivery_buttonNext);
-        layoutMain = findViewById(R.id.layoutNewDelivery);
+        rootLayout = findViewById(R.id.layoutNewDeliveryMain);
         layoutAddress = findViewById(R.id.layoutAddress);
         editTextCompanyName = findViewById(R.id.NewDelivery_editTextCompanyName);
         editTextContactName = findViewById(R.id.NewDelivery_editTextContactName);
@@ -98,27 +103,119 @@ public class NewDeliveryHeader extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (Constant.address != null) {
+                if (fieldsValid()) {
 
-                    Location location = new Location("");
+                    if (Constant.address != null) {
 
-                    location.setLatitude(Constant.address.getLatitude());
-                    location.setLongitude(Constant.address.getLongitude());
+                        Location location = new Location("");
 
-                    Constant.deliveryData.setLocation(location);
-                    Constant.deliveryData.setAddress(Constant.address.getAddressLine(0));
+                        location.setLatitude(Constant.address.getLatitude());
+                        location.setLongitude(Constant.address.getLongitude());
+
+                        Constant.deliveryData.setLocation(location);
+                        Constant.deliveryData.setAddress(Constant.address.getAddressLine(0));
+                    }
+
+
+                    Constant.deliveryData.setCustomerName(editTextCompanyName.getText().toString());
+                    Constant.deliveryData.setContactName(editTextContactName.getText().toString());
+                    Constant.deliveryData.setContactNumber(editTextContactNumber.getText().toString());
+                    Constant.deliveryData.setDocument(editTextDocument.getText().toString().toUpperCase());
+                    Constant.deliveryData.setTripId(textViewTrip.getText().toString());
+
+                    startActivity(new Intent(NewDeliveryHeader.this, NewDeliveryDetail.class));
                 }
-
-
-                Constant.deliveryData.setCustomerName(editTextCompanyName.getText().toString());
-                Constant.deliveryData.setContactName(editTextContactName.getText().toString());
-                Constant.deliveryData.setContactNumber(editTextContactNumber.getText().toString());
-                Constant.deliveryData.setDocument(editTextDocument.getText().toString().toUpperCase());
-                Constant.deliveryData.setTripId(textViewTrip.getText().toString());
-
-                startActivity(new Intent(NewDeliveryHeader.this, NewDeliveryDetail.class));
             }
         });
+
+        // Listen for layout changes
+        rootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootLayout.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootLayout.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                // Define a threshold for detecting the keyboard (make sure it's larger than standard navigation bar size)
+                boolean isKeyboardNowVisible = keypadHeight > screenHeight * 0.15; // Adjust threshold to 15% of screen height
+
+                if (isKeyboardNowVisible && !isKeyboardVisible) {
+                    // Keyboard is visible, hide the button
+                    buttonNext.setVisibility(View.GONE);
+                    isKeyboardVisible = true;
+                } else if (!isKeyboardNowVisible && isKeyboardVisible) {
+                    // Keyboard is hidden, show the button
+                    buttonNext.setVisibility(View.VISIBLE);
+                    isKeyboardVisible = false;
+                }
+            }
+        });
+    }
+
+
+    private boolean fieldsValid() {
+
+        String deliveryName = editTextDocument.getText().toString();
+
+        if (deliveryName.isEmpty()) {
+
+            ToastLogger.message(getApplicationContext(), "Please specify delivery number.");
+
+            editTextDocument.requestFocus();
+
+            return false;
+
+        } else if (Constant.listDeliveryNames.contains(deliveryName)) {
+
+            ToastLogger.message(getApplicationContext(), "Delivery " + deliveryName + " already exists.");
+
+            editTextDocument.requestFocus();
+
+            return false;
+        }
+
+        String customerName = editTextCompanyName.getText().toString();
+
+        if (customerName.isEmpty()) {
+
+            ToastLogger.message(getApplicationContext(), "Please specify customer name.");
+
+            editTextCompanyName.requestFocus();
+
+            return false;
+        }
+
+        String contactName = editTextContactName.getText().toString();
+
+        if (contactName.isEmpty()) {
+
+            ToastLogger.message(getApplicationContext(), "Please specify contact name.");
+
+            editTextContactName.requestFocus();
+
+            return false;
+        }
+
+        String contactNumber = editTextContactNumber.getText().toString();
+
+        if (contactNumber.isEmpty()) {
+
+            ToastLogger.message(getApplicationContext(), " Please specify contact number.");
+
+            editTextContactNumber.requestFocus();
+
+            return false;
+        }
+
+        if (!Constant.deliveryEdit && Constant.address == null) {
+
+            ToastLogger.message(getApplicationContext(), "Please add an address.");
+
+            return  false;
+        }
+
+        return true;
     }
 
 

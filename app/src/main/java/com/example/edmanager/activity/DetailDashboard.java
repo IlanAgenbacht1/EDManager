@@ -64,6 +64,12 @@ public class DetailDashboard extends AppCompatActivity {
                 if (item.equals("ADD_DELIVERY")) {
 
                     Constant.listParcels = new ArrayList<>();
+                    Constant.listDeliveryNames = new ArrayList<>();
+
+                    for (int i = 0; i < listDeliveries.size(); i++) {
+
+                        Constant.listDeliveryNames.add(listDeliveries.get(i).getDocument());
+                    }
 
                     startActivity(new Intent(DetailDashboard.this, NewDeliveryHeader.class));
 
@@ -283,22 +289,53 @@ public class DetailDashboard extends AppCompatActivity {
 
                     animatorSet.start();
 
+                    if (fabEdit.getVisibility() == View.VISIBLE) {
+
+                        ObjectAnimator scaleX3 = ObjectAnimator.ofFloat(fabEdit, "scaleX", 0f);
+                        ObjectAnimator scaleY3 = ObjectAnimator.ofFloat(fabEdit, "scaleY", 0f);
+                        AnimatorSet animatorSet3 = new AnimatorSet();
+                        animatorSet3.playTogether(scaleX3, scaleY3);
+                        animatorSet3.setDuration(200); // animation duration in milliseconds
+
+                        animatorSet3.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                fabEdit.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
+                            }
+                        });
+
+                        animatorSet3.start();
+                    }
+
                     if (listDeliveries.isEmpty()) {
 
                         ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabDeploy, "scaleX", 0f);
                         ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabDeploy, "scaleY", 0f);
                         AnimatorSet animatorSet2 = new AnimatorSet();
-                        animatorSet.playTogether(scaleX, scaleY);
-                        animatorSet.setDuration(200); // animation duration in milliseconds
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
 
-                        animatorSet.addListener(new AnimatorListenerAdapter() {
+                        animatorSet2.addListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 fabDeploy.setVisibility(View.INVISIBLE); // Set FAB to invisible after animation ends
                             }
                         });
 
-                        animatorSet.start();
+                        animatorSet2.start();
+
+                    } else {
+
+                        fabDeploy.setVisibility(View.VISIBLE);
+
+                        ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabDeploy, "scaleX", 1f);
+                        ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabDeploy, "scaleY", 1f);
+                        AnimatorSet animatorSet2 = new AnimatorSet();
+                        animatorSet2.playTogether(scaleX2, scaleY2);
+                        animatorSet2.setDuration(200); // animation duration in milliseconds
+                        animatorSet2.setStartDelay(500);
+
+                        animatorSet2.start();
                     }
                 }
 

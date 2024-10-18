@@ -27,6 +27,7 @@ public class Constant {
     public static ArrayList<String> adapterStagingTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteDeliveries = new ArrayList<>();
+    public static ArrayList<String> listDeliveryNames = new ArrayList<>();
 
     public static int deliveryCount;
 
