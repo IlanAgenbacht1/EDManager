@@ -33,11 +33,10 @@ public class Constant {
 
     public static boolean refreshDashboard;
     public static boolean tripHighlightedForDelete;
-    public static boolean deliveryHighlightedForDelete;
     public static boolean tripDeleteMode;
-    public static boolean deliveryDeleteMode;
     public static boolean tripStaging;
     public static boolean deliveryEdit;
+    public static boolean deliveryCompleted;
 
     public static Address address;
 

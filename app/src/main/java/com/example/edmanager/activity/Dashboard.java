@@ -76,13 +76,23 @@ public class Dashboard extends AppCompatActivity {
 
                         if (Constant.listCompletedTrips.contains(tripNumber)) {
 
-                            ToastLogger.message(getApplicationContext(), "This will open up a screen showing all captured data. The user might then archive the trip once done viewing.");
+                            Constant.tripStaging = false;
+                            Constant.deliveryCompleted = true;
+                            Constant.trip = tripNumber;
+
+                            startActivity(new Intent(Dashboard.this, DetailDashboardCompleted.class));
+
+                            finish();
 
                         } else if (Constant.listInProgressTrips.contains(tripNumber)) {
+
+                            Constant.deliveryCompleted = false;
 
                             ToastLogger.message(getApplicationContext(), "Trip in progress.");
 
                         } else {
+
+                            Constant.deliveryCompleted = false;
 
                             if (Constant.listStagingTrips.contains(tripNumber)) {
 

@@ -30,6 +30,9 @@
             android:name=".activity.DetailDashboard"
             android:exported="false" />
         <activity
+            android:name=".activity.DetailDashboardCompleted"
+            android:exported="false" />
+        <activity
             android:name=".activity.Splash"
             android:exported="true"
             android:theme="@style/Material" >

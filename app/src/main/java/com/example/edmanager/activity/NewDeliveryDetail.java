@@ -125,6 +125,11 @@ public class NewDeliveryDetail extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
+
+        if (Constant.deliveryEdit) {
+
+            buttonCreateDelivery.setText("Update Delivery");
+        }
     }
 
 

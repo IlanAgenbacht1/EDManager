@@ -1,6 +1,7 @@
 package com.example.edmanager.adapter;
 
 import android.content.Context;
+import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -46,6 +47,12 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_add_button, parent, false);
 
             return new ButtonViewHolder(view);
+
+        } else if (Constant.deliveryCompleted) {
+
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_delivery_completed, parent, false);
+
+            return new ViewHolder(view);
 
         } else {
 
