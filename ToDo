@@ -1,9 +1,8 @@
 FUNCTIONALITY
 
-- Edit deliveries.
-
 - Validate client when logging in.
+
+- Archive completed trips. 
 
 UI
 
-- Cleaner handling of long clicks.
