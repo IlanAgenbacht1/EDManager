@@ -14,3 +14,10 @@ UI
 - Basic clean animation for archived UI.
 
 - Flagged parcels.
+
+
+!!BUGS!!
+
+- Trip status not updating correctly.
+
+- Fabs on main dashboard not animating correctly.
