@@ -1,9 +1,23 @@
 FUNCTIONALITY
 
-- Edit deliveries.
-
 - Validate client when logging in.
+
+- Archive completed trips. 
+
+- Check if parcels have been flagged.
+
 
 UI
 
-- Cleaner handling of long clicks.
+- Captured data screen.
+
+- Basic clean animation for archived UI.
+
+- Flagged parcels.
+
+
+!!BUGS!!
+
+- Trip status not updating correctly.
+
+- Fabs on main dashboard not animating correctly.
