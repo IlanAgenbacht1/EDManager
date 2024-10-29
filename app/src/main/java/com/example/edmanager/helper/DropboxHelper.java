@@ -217,7 +217,7 @@ public class DropboxHelper {
 
                 if (item.equals(trip)) {
 
-                    //Log.i("SYNC", trip + " in progress");
+                    Log.i("SYNC", trip + " in progress");
 
                     return 0;
                 }
@@ -233,7 +233,7 @@ public class DropboxHelper {
 
                 if (item.equals(trip)) {
 
-                    //Log.i("SYNC",  trip + " completed");
+                    Log.i("SYNC",  trip + " staging");
 
                     return 3;
                 }
@@ -251,7 +251,7 @@ public class DropboxHelper {
 
                     if (item.equals(trip)) {
 
-                        //Log.i("SYNC",  trip + " completed");
+                        Log.i("SYNC",  trip + " completed");
 
                         return 1;
                     }

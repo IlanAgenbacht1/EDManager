@@ -76,6 +76,15 @@ public class DetailDashboardCompleted extends AppCompatActivity {
         recyclerView.setAdapter(detailAdapter);
 
         textViewTrip.setText("SHOWING DELIVERIES FOR " + Constant.trip);
+
+        fabArchive.setVisibility(View.VISIBLE);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabArchive, "scaleX", 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabArchive, "scaleY", 1f);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleX, scaleY);
+        animatorSet.setDuration(200); // animation duration in milliseconds
+        animatorSet.setStartDelay(1000);
+        animatorSet.start();
     }
 
 

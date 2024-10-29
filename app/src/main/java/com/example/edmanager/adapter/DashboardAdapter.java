@@ -1,11 +1,15 @@
 package com.example.edmanager.adapter;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -75,6 +79,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
     }
 
 
+
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewTrip;
@@ -138,6 +144,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                 textViewStatus.setText("Completed");
                 textViewStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));
 
+                startFlashingAnimation(itemView);
+
                 Log.i("SYNC", tripName + "adapter completed");
 
             } else if (Constant.listStagingTrips.contains(tripName)) {
@@ -177,6 +185,17 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                 Constant.tripHighlightedForDelete = true;
                 return true; // Return true to indicate the event was handled
             });
+        }
+
+        private void startFlashingAnimation(View view) {
+            view.setAlpha(1f); // Ensure it's fully visible
+
+            ObjectAnimator fadeOut = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.75f);
+            fadeOut.setDuration(500); // Duration of fade out
+            fadeOut.setRepeatCount(ValueAnimator.INFINITE);
+            fadeOut.setRepeatMode(ValueAnimator.REVERSE);
+
+            fadeOut.start();
         }
 
     }

@@ -41,15 +41,11 @@ public class Dashboard extends AppCompatActivity {
     ConstraintLayout buttonDeleteTrip, constraintLayout;
     EditText tripEditText;
     TextView textViewStatus;
-
-    FloatingActionButton fabCreateTrip, fabDelete;
-
+    FloatingActionButton fabCreateTrip, fabDelete, fabViewArchive;
     DashboardAdapter adapter;
     RecyclerView recyclerView;
-
     Boolean deleteModeAnimated;
     int originalEndMargin;
-
     File[] localTrips;
 
 
@@ -62,6 +58,7 @@ public class Dashboard extends AppCompatActivity {
         constraintLayout = findViewById(R.id.dashboardLayout);
         fabCreateTrip = findViewById(R.id.fabCreateTrip);
         fabDelete = findViewById(R.id.fabDeleteTrip);
+        fabViewArchive = findViewById(R.id.fabViewArchive);
 
         localTrips = null;
         Constant.listDeleteTrips = new ArrayList<>();
@@ -303,6 +300,14 @@ public class Dashboard extends AppCompatActivity {
                                     animatorSet.playTogether(scaleX, scaleY);
                                     animatorSet.setDuration(400); // animation duration in milliseconds
                                     animatorSet.start();
+
+                                    fabViewArchive.setVisibility(View.VISIBLE);
+                                    ObjectAnimator scaleX1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleX", 1f);
+                                    ObjectAnimator scaleY1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleY", 1f);
+                                    AnimatorSet animatorSet1 = new AnimatorSet();
+                                    animatorSet1.playTogether(scaleX1, scaleY1);
+                                    animatorSet1.setDuration(400); // animation duration in milliseconds
+                                    animatorSet1.start();
                                 }
                             });
                         }
@@ -336,6 +341,14 @@ public class Dashboard extends AppCompatActivity {
                     animatorSet.playTogether(scaleX, scaleY);
                     animatorSet.setDuration(400); // animation duration in milliseconds
                     animatorSet.start();
+
+                    fabViewArchive.setVisibility(View.VISIBLE);
+                    ObjectAnimator scaleX1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleX", 1f);
+                    ObjectAnimator scaleY1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleY", 1f);
+                    AnimatorSet animatorSet1 = new AnimatorSet();
+                    animatorSet1.playTogether(scaleX1, scaleY1);
+                    animatorSet1.setDuration(400); // animation duration in milliseconds
+                    animatorSet1.start();
                 }
 
                 Constant.refreshDashboard = false;
@@ -349,6 +362,14 @@ public class Dashboard extends AppCompatActivity {
                 animatorSet.playTogether(scaleX, scaleY);
                 animatorSet.setDuration(400); // animation duration in milliseconds
                 animatorSet.start();
+
+                fabViewArchive.setVisibility(View.VISIBLE);
+                ObjectAnimator scaleX1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleX", 1f);
+                ObjectAnimator scaleY1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleY", 1f);
+                AnimatorSet animatorSet1 = new AnimatorSet();
+                animatorSet1.playTogether(scaleX1, scaleY1);
+                animatorSet1.setDuration(400); // animation duration in milliseconds
+                animatorSet1.start();
             }
 
             updateStatus();

@@ -17,7 +17,7 @@
         android:paddingStart="13dp"
         android:paddingBottom="6.5dp"
         android:text="Delivery"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/textViewDetailParcelCount"
@@ -28,11 +28,11 @@
         android:id="@+id/textViewDetailParcelCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp"
+        android:layout_marginEnd="10dp"
         android:text="ParcelCount"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         app:layout_constraintBottom_toBottomOf="@+id/textViewDetailDeliveryName"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@+id/textViewDetailDeliveryName" />
 
     <TextView
@@ -42,7 +42,7 @@
         android:padding="6.5dp"
         android:paddingStart="13dp"
         android:text="Customer"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDetailDeliveryName" />
@@ -56,7 +56,7 @@
         android:paddingEnd="6.5dp"
         android:paddingBottom="13dp"
         android:text="Address"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         app:layout_constraintEnd_toStartOf="@+id/textViewDetailContactNumber"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDetailCustomer" />
@@ -68,7 +68,7 @@
         android:paddingEnd="13dp"
         android:paddingStart="6.5dp"
         android:text="ContactName"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         app:layout_constraintBottom_toTopOf="@+id/textViewDetailContactNumber"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -80,8 +80,19 @@
         android:paddingEnd="13dp"
         android:paddingBottom="13dp"
         android:text="ContactNumber"
-        android:textColor="@color/pearl"
+        android:textColor="@color/gold"
         app:layout_constraintBottom_toBottomOf="@+id/textViewDetailAddress"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDetailParcelCount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewDetailParcelCount"
+        app:srcCompat="@drawable/icon_tick"
+        app:tint="@color/gold" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
