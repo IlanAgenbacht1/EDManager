@@ -1,7 +1,11 @@
 package com.example.edmanager.helper;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
@@ -10,16 +14,25 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.WriteMode;
+import com.example.edmanager.database.DeliveryModel;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DropboxHelper {
 
@@ -308,6 +321,68 @@ public class DropboxHelper {
 
             e.printStackTrace();
         }
+    }
+
+
+    public static void returnCapturedData(String deliveryNumber) {
+
+        try (InputStream in = dropboxClient.files().download("/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + deliveryNumber + "/" + deliveryNumber + ".json").getInputStream()) {
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+            // Read the JSON file content into a String
+            String jsonText = reader.lines().collect(Collectors.joining("\n"));
+
+            // Parse the String into a JSONObject
+            JSONObject jsonData = new JSONObject(jsonText);
+
+            Constant.deliveryData = new DeliveryModel();
+            Constant.deliveryData.setDocument(deliveryNumber);
+            Constant.deliveryData.setCustomerName(jsonData.getString("customer"));
+            Constant.deliveryData.setAddress(jsonData.getString("address"));
+            Constant.deliveryData.setTime(jsonData.getString("time"));
+            Constant.deliveryData.setComment(jsonData.getString("comment"));
+
+            List<String> listParcels = new ArrayList<>();
+            JSONArray items = jsonData.getJSONArray("items");
+
+            for (int i = 0; i < items.length(); i++) {
+
+                listParcels.add(items.getString(i));
+            }
+
+            Constant.deliveryData.setParcelNumbers(listParcels);
+
+            JSONObject jsonLocation = jsonData.getJSONObject("location");
+
+            Location location = new Location("null");
+            location.setLatitude(jsonLocation.getDouble("latitude"));
+            location.setLongitude(jsonLocation.getDouble("longitude"));
+
+            Constant.deliveryData.setLocation(location);
+            Constant.deliveryData.setImagePath(jsonData.getString("image"));
+            Constant.deliveryData.setSignPath(jsonData.getString("signature"));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    public static Bitmap returnCapturedImage(String imagePath) {
+
+        // Fetch the image as an InputStream from Dropbox
+
+        try (InputStream in = dropboxClient.files().download(imagePath).getInputStream()) {
+            // Decode the InputStream into a Bitmap
+            return BitmapFactory.decodeStream(in);
+
+        } catch (DbxException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

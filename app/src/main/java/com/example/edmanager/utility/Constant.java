@@ -37,6 +37,7 @@ public class Constant {
     public static boolean tripStaging;
     public static boolean deliveryEdit;
     public static boolean deliveryCompleted;
+    public static boolean archive;
 
     public static Address address;
 

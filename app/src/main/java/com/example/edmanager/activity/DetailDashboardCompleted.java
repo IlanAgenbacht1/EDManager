@@ -54,6 +54,25 @@ public class DetailDashboardCompleted extends AppCompatActivity {
             @Override
             public void onItemClick(String item) {
 
+                if (Constant.archive) {
+
+
+                } else {
+
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            DropboxHelper.returnCapturedData(item);
+
+                            startActivity(new Intent(DetailDashboardCompleted.this, CapturedData.class));
+
+                            finish();
+                        }
+                    });
+
+                    thread.start();
+                }
 
             }
 

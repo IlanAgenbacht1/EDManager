@@ -117,11 +117,11 @@ public class NewDeliveryHeader extends AppCompatActivity {
                     }
 
 
-                    Constant.deliveryData.setCustomerName(editTextCompanyName.getText().toString());
-                    Constant.deliveryData.setContactName(editTextContactName.getText().toString());
-                    Constant.deliveryData.setContactNumber(editTextContactNumber.getText().toString());
-                    Constant.deliveryData.setDocument(editTextDocument.getText().toString().toUpperCase());
-                    Constant.deliveryData.setTripId(textViewTrip.getText().toString());
+                    Constant.deliveryData.setCustomerName(editTextCompanyName.getText().toString().trim());
+                    Constant.deliveryData.setContactName(editTextContactName.getText().toString().trim());
+                    Constant.deliveryData.setContactNumber(editTextContactNumber.getText().toString().trim());
+                    Constant.deliveryData.setDocument(editTextDocument.getText().toString().toUpperCase().trim());
+                    Constant.deliveryData.setTripId(textViewTrip.getText().toString().trim());
 
                     startActivity(new Intent(NewDeliveryHeader.this, NewDeliveryDetail.class));
                 }

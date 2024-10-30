@@ -17,6 +17,9 @@
         android:theme="@style/MaterialActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".activity.CapturedData"
+            android:exported="false" />
+        <activity
             android:name=".activity.Parcel"
             android:exported="false" />
         <activity
