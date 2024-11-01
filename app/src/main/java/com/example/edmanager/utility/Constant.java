@@ -43,4 +43,5 @@ public class Constant {
 
     public static final String LOCAL_TRIP_DIRECTORY = "/Trip/";
     public static final String LOCAL_EXISTING_TRIP_DIRECTORY = "/ExistingTrip/";
+    public static final String LOCAL_TRIP_ARCHIVE_DIRECTORY = "/Archive/";
 }

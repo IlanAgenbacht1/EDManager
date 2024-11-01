@@ -65,6 +65,7 @@ public class Splash extends AppCompatActivity {
                     StoreCompany(editTextCompany.getText().toString());
                     Constant.company = GetCompany();
                     Constant.refreshDashboard = true;
+                    Constant.archive = false;
 
                     FileHelper.deleteAllFiles(getApplicationContext());
 

@@ -109,20 +109,38 @@ public class JsonHelper {
 
             JSONObject tripData;
 
+            if (Constant.archive) {
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/" + trip + ".json")))) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_TRIP_ARCHIVE_DIRECTORY + Constant.company + "/" + trip + ".json")))) {
 
-                String line;
+                    String line;
 
-                while ((line = reader.readLine()) != null) {
+                    while ((line = reader.readLine()) != null) {
 
-                    jsonString.append(line);
+                        jsonString.append(line);
+                    }
+
+                    tripData = new JSONObject(jsonString.toString());
                 }
 
-                tripData = new JSONObject(jsonString.toString());
-            }
+                return tripData;
 
-            return tripData;
+            } else {
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(new File(context.getFilesDir() + Constant.LOCAL_EXISTING_TRIP_DIRECTORY + Constant.company + "/" + trip + ".json")))) {
+
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+
+                        jsonString.append(line);
+                    }
+
+                    tripData = new JSONObject(jsonString.toString());
+                }
+
+                return tripData;
+            }
 
         } catch (Exception e) {
 

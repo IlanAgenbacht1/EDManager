@@ -80,15 +80,28 @@ public class CapturedData extends AppCompatActivity {
                 @Override
                 public void run() {
 
-                    Bitmap itemBitMap = DropboxHelper.returnCapturedImage("/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + Constant.deliveryData.getDocument() + "/" + Constant.deliveryData.getImagePath() + ".jpg");
-                    Bitmap signBitMap = DropboxHelper.returnCapturedImage("/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + Constant.deliveryData.getDocument() + "/" + Constant.deliveryData.getSignPath() + ".jpg");
+                    Bitmap itemBitMap = null;
+                    Bitmap signBitMap = null;
 
+                    if (Constant.archive) {
+
+                        itemBitMap = DropboxHelper.returnCapturedImage("/Customers/" + Constant.company + "/Completed/Archive/" + Constant.trip + "/" + Constant.deliveryData.getDocument() + "/" + Constant.deliveryData.getImagePath() + ".jpg");
+                        signBitMap = DropboxHelper.returnCapturedImage("/Customers/" + Constant.company + "/Completed/Archive/" + Constant.trip + "/" + Constant.deliveryData.getDocument() + "/" + Constant.deliveryData.getSignPath() + ".jpg");
+
+                    } else {
+
+                        itemBitMap = DropboxHelper.returnCapturedImage("/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + Constant.deliveryData.getDocument() + "/" + Constant.deliveryData.getImagePath() + ".jpg");
+                        signBitMap = DropboxHelper.returnCapturedImage("/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + Constant.deliveryData.getDocument() + "/" + Constant.deliveryData.getSignPath() + ".jpg");
+                    }
+
+                    Bitmap finalItemBitMap = itemBitMap;
+                    Bitmap finalSignBitMap = signBitMap;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
-                            imageViewItem.setImageBitmap(itemBitMap);
-                            imageViewSignature.setImageBitmap(signBitMap);
+                            imageViewItem.setImageBitmap(finalItemBitMap);
+                            imageViewSignature.setImageBitmap(finalSignBitMap);
                         }
                     });
                 }

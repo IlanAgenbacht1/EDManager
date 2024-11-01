@@ -20,6 +20,7 @@ import com.example.edmanager.R;
 import com.example.edmanager.adapter.DetailAdapter;
 import com.example.edmanager.database.DeliveryModel;
 import com.example.edmanager.helper.DropboxHelper;
+import com.example.edmanager.helper.FileHelper;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
@@ -54,26 +55,30 @@ public class DetailDashboardCompleted extends AppCompatActivity {
             @Override
             public void onItemClick(String item) {
 
-                if (Constant.archive) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
+                        if (Constant.archive) {
 
-                } else {
+                            String path = "/Customers/" + Constant.company + "/Completed/" + "Archive/" + Constant.trip + "/" + item + "/" + item + ".json";
 
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
+                            DropboxHelper.returnCapturedData(item, path);
 
-                            DropboxHelper.returnCapturedData(item);
+                        } else {
 
-                            startActivity(new Intent(DetailDashboardCompleted.this, CapturedData.class));
+                            String path = "/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + item + "/" + item + ".json";
 
-                            finish();
+                            DropboxHelper.returnCapturedData(item, path);
                         }
-                    });
 
-                    thread.start();
-                }
+                        startActivity(new Intent(DetailDashboardCompleted.this, CapturedData.class));
 
+                        finish();
+                    }
+                });
+
+                thread.start();
             }
 
             @Override
@@ -88,7 +93,27 @@ public class DetailDashboardCompleted extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
+                        DropboxHelper.archiveTrip(Constant.trip);
+
+                        FileHelper.archiveTripFile(getApplicationContext(), Constant.trip);
+
+                        Constant.listCompletedTrips.remove(Constant.trip);
+                        Constant.listTrips.remove(Constant.trip);
+                        Constant.listConfiguredTrips.remove(Constant.trip);
+
+                        ToastLogger.message(getApplicationContext(), "Trip " + Constant.trip + " archived.");
+
+                        Constant.archive = true;
+
+                        startActivity(new Intent(DetailDashboardCompleted.this, ArchiveDashboard.class));
+                    }
+                });
+
+                thread.start();
             }
         });
 
@@ -96,14 +121,17 @@ public class DetailDashboardCompleted extends AppCompatActivity {
 
         textViewTrip.setText("SHOWING DELIVERIES FOR " + Constant.trip);
 
-        fabArchive.setVisibility(View.VISIBLE);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabArchive, "scaleX", 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabArchive, "scaleY", 1f);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(scaleX, scaleY);
-        animatorSet.setDuration(200); // animation duration in milliseconds
-        animatorSet.setStartDelay(1000);
-        animatorSet.start();
+        if (!Constant.archive) {
+
+            fabArchive.setVisibility(View.VISIBLE);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabArchive, "scaleX", 1f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabArchive, "scaleY", 1f);
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(scaleX, scaleY);
+            animatorSet.setDuration(200); // animation duration in milliseconds
+            animatorSet.setStartDelay(1000);
+            animatorSet.start();
+        }
     }
 
 
@@ -111,8 +139,17 @@ public class DetailDashboardCompleted extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        startActivity(new Intent(DetailDashboardCompleted.this, Dashboard.class));
+        if (Constant.archive) {
 
-        finish();
+            startActivity(new Intent(DetailDashboardCompleted.this, ArchiveDashboard.class));
+
+            finish();
+
+        } else {
+
+            startActivity(new Intent(DetailDashboardCompleted.this, Dashboard.class));
+
+            finish();
+        }
     }
 }

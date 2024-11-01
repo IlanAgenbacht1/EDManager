@@ -249,6 +249,18 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        fabViewArchive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Constant.archive = true;
+
+                startActivity(new Intent(Dashboard.this, ArchiveDashboard.class));
+
+                finish();
+            }
+        });
+
         updateFiles();
     }
 

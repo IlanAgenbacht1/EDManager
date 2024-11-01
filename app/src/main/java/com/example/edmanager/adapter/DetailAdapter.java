@@ -50,9 +50,18 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         } else if (Constant.deliveryCompleted) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_delivery_completed, parent, false);
+            if (Constant.archive) {
 
-            return new ViewHolder(view);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_delivery_archived, parent, false);
+
+                return new ViewHolder(view);
+
+            } else {
+
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_delivery_completed, parent, false);
+
+                return new ViewHolder(view);
+            }
 
         } else {
 

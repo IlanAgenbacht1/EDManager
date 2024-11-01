@@ -45,6 +45,7 @@ public class DropboxHelper {
     private static final String DROPBOX_IN_PROGRESS_PATH = "/InProgress/";
     private static final String DROPBOX_COMPLETED_PATH = "/Completed/";
     private static final String DROPBOX_STAGING_PATH = "/Staging/";
+    private static final String DROPBOX_ARCHIVE_PATH = "/Completed/Archive/";
     private static final String LOCAL_IMAGE_PATH = "/DeliveryApp/DeliveryImage/";
     private static final String LOCAL_SIGNATURE_PATH = "/DeliveryApp/DeliverySignature/";
 
@@ -324,9 +325,9 @@ public class DropboxHelper {
     }
 
 
-    public static void returnCapturedData(String deliveryNumber) {
+    public static void returnCapturedData(String deliveryNumber, String path) {
 
-        try (InputStream in = dropboxClient.files().download("/Customers/" + Constant.company + "/Completed/" + Constant.trip + "/" + deliveryNumber + "/" + deliveryNumber + ".json").getInputStream()) {
+        try (InputStream in = dropboxClient.files().download(path).getInputStream()) {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
@@ -383,6 +384,18 @@ public class DropboxHelper {
         }
 
         return null;
+    }
+
+
+    public static void archiveTrip(String trip) {
+        try {
+
+            getClient().files().moveV2(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + trip, DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_ARCHIVE_PATH + trip);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 
 }
