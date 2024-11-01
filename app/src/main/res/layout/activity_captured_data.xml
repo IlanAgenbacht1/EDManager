@@ -5,8 +5,7 @@
     android:id="@+id/layoutNewDeliveryMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pearl"
-    android:padding="10dp">
+    android:background="@color/pearl">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,9 +23,10 @@
             android:id="@+id/CapturedData_customerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="18sp"
+            android:text="Customer"
             android:textColor="@color/pearl"
+            android:textSize="18sp"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,29 +35,99 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="TextView"
-            android:textSize="18sp"
+            android:text="Delivery"
             android:textColor="@color/pearl"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/CapturedData_customerName" />
 
         <ImageView
             android:id="@+id/CapturedData_imageViewItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="15dp"
             android:contentDescription="Image 1 from Dropbox"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toEndOf="@+id/CapturedData_imageViewSignature"
+            app:layout_constraintTop_toTopOf="@+id/CapturedData_imageViewSignature" />
 
         <ImageView
             android:id="@+id/CapturedData_imageViewSignature"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="Image 1 from Dropbox"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CapturedData_recyclerViewCapturedParcels" />
+
+        <TextView
+            android:id="@+id/CapturedData_textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Image 1 from Dropbox"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/CapturedData_imageViewItem" />
+            android:text="Date"
+            android:textAlignment="textEnd"
+            android:textColor="@color/pearl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/CapturedData_textViewTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textAlignment="textEnd"
+            android:textColor="@color/pearl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CapturedData_textViewDate" />
+
+        <TextView
+            android:id="@+id/CapturedData_textViewCoordinates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/border_customerfields"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="7.5dp"
+            android:text="Coordinates"
+            android:textAlignment="center"
+            android:textColor="@color/gold"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CapturedData_documentNumber" />
+
+        <TextView
+            android:id="@+id/CapturedData_textViewComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Comment"
+            android:textColor="@color/pearl"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CapturedData_imageViewSignature" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/CapturedData_recyclerViewCapturedParcels"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Items:"
+            android:textColor="@color/gold"
+            app:layout_constraintStart_toStartOf="@+id/CapturedData_recyclerViewCapturedParcels"
+            app:layout_constraintTop_toBottomOf="@+id/CapturedData_textViewCoordinates" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
