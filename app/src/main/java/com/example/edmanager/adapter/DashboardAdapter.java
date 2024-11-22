@@ -88,8 +88,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
     }
 
 
-
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewTrip;
@@ -138,9 +136,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                     textViewStatus.setText("In Progress");
                     textViewStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.gold));
 
-                    Constant.adapterInProgressTrips.add(tripName);
+                    /*Constant.adapterInProgressTrips.add(tripName);
 
                     if (Constant.adapterRemoveInProgressTrip.equals(tripName)) {
+
+                        Log.i("SYNC", tripName + " set to remove from in progress");
 
                         textViewStatus.setVisibility(View.INVISIBLE);
 
@@ -148,7 +148,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                         Constant.adapterInProgressTrips.remove(tripName);
 
                         Constant.adapterRemoveInProgressTrip = "";
-                    }
+                    }*/
 
                 } else if (Constant.listCompletedTrips.contains(tripName)) {
                     textViewStatus.setVisibility(View.VISIBLE);
@@ -164,7 +164,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                     textViewStatus.setText("Staging");
                     textViewStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.pearl));
 
-                    Constant.adapterStagingTrips.add(tripName);
+                    /*Constant.adapterStagingTrips.add(tripName);
 
                     if (Constant.adapterRemoveStagingTrip.equals(tripName)) {
 
@@ -174,7 +174,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.View
                         Constant.adapterStagingTrips.remove(tripName);
 
                         Constant.adapterRemoveStagingTrip = "";
-                    }
+                    }*/
 
                 } else if (Constant.listConfiguredTrips.contains(tripName)) {
 

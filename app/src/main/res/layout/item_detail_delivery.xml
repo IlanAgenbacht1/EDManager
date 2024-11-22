@@ -65,9 +65,10 @@
         android:id="@+id/textViewDetailContactName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingEnd="13dp"
         android:paddingStart="6.5dp"
+        android:paddingEnd="13dp"
         android:text="ContactName"
+        android:textAlignment="viewEnd"
         android:textColor="@color/theme"
         app:layout_constraintBottom_toTopOf="@+id/textViewDetailContactNumber"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -80,6 +81,7 @@
         android:paddingEnd="13dp"
         android:paddingBottom="13dp"
         android:text="ContactNumber"
+        android:textAlignment="viewEnd"
         android:textColor="@color/theme"
         app:layout_constraintBottom_toBottomOf="@+id/textViewDetailAddress"
         app:layout_constraintEnd_toEndOf="parent" />

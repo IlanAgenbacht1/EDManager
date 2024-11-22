@@ -8,11 +8,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -42,10 +47,11 @@ public class Dashboard extends AppCompatActivity {
     EditText tripEditText;
     TextView textViewStatus;
     FloatingActionButton fabCreateTrip, fabDelete, fabViewArchive;
+    ProgressBar progressBar;
     DashboardAdapter adapter;
     RecyclerView recyclerView;
     Boolean deleteModeAnimated;
-    int originalEndMargin;
+    int pos = 0;
     File[] localTrips;
 
 
@@ -59,6 +65,7 @@ public class Dashboard extends AppCompatActivity {
         fabCreateTrip = findViewById(R.id.fabCreateTrip);
         fabDelete = findViewById(R.id.fabDeleteTrip);
         fabViewArchive = findViewById(R.id.fabViewArchive);
+        progressBar = findViewById(R.id.tripDashProgressBar);
 
         localTrips = null;
         Constant.listDeleteTrips = new ArrayList<>();
@@ -85,7 +92,14 @@ public class Dashboard extends AppCompatActivity {
 
                             Constant.deliveryCompleted = false;
 
-                            ToastLogger.message(getApplicationContext(), "Trip in progress.");
+                            Constant.tripStaging = false;
+
+                            Constant.trip = tripNumber;
+                            Constant.deliveryCount = JsonHelper.returnDeliveryCount(getApplicationContext(), tripNumber);
+
+                            startActivity(new Intent(Dashboard.this, DetailDashboard.class));
+
+                            finish();
 
                         } else {
 
@@ -274,58 +288,52 @@ public class Dashboard extends AppCompatActivity {
 
                 if (localTrips == null || localTrips.length == 0) {
 
-                    ToastLogger.message(getApplicationContext(), "Loading trips...");
+                    //ToastLogger.message(getApplicationContext(), "Loading trips...");
 
                     Thread thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
 
                             DropboxHelper.fetchAllTrips(getApplicationContext());
-
-                            localTrips = FileHelper.returnTripFiles(getApplicationContext());
-
-                            for (File tripFile : localTrips) {
-
-                                String trip = tripFile.getName().substring(0, tripFile.getName().length() - 5);
-
-                                if (!Constant.listTrips.contains(trip)) {
-
-                                    Constant.listTrips.add(trip);
-                                }
-
-                                if (JsonHelper.returnDeliveryCount(getApplicationContext(), trip) > 0 && !Constant.listConfiguredTrips.contains(trip)) {
-
-                                    Constant.listConfiguredTrips.add(trip);
-                                }
-                            }
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    adapter.notifyDataSetChanged();
-
-                                    fabCreateTrip.setVisibility(View.VISIBLE);
-                                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
-                                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
-                                    AnimatorSet animatorSet = new AnimatorSet();
-                                    animatorSet.playTogether(scaleX, scaleY);
-                                    animatorSet.setDuration(400); // animation duration in milliseconds
-                                    animatorSet.start();
-
-                                    fabViewArchive.setVisibility(View.VISIBLE);
-                                    ObjectAnimator scaleX1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleX", 1f);
-                                    ObjectAnimator scaleY1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleY", 1f);
-                                    AnimatorSet animatorSet1 = new AnimatorSet();
-                                    animatorSet1.playTogether(scaleX1, scaleY1);
-                                    animatorSet1.setDuration(400); // animation duration in milliseconds
-                                    animatorSet1.start();
-                                }
-                            });
                         }
                     });
 
                     thread.start();
+
+                    Handler textHandler = new Handler();
+                    textHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (!Constant.listTrips.isEmpty()) {
+
+                                fabCreateTrip.setVisibility(View.VISIBLE);
+                                ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabCreateTrip, "scaleX", 1f);
+                                ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabCreateTrip, "scaleY", 1f);
+                                AnimatorSet animatorSet = new AnimatorSet();
+                                animatorSet.playTogether(scaleX, scaleY);
+                                animatorSet.setDuration(400); // animation duration in milliseconds
+                                animatorSet.start();
+
+                                fabViewArchive.setVisibility(View.VISIBLE);
+                                ObjectAnimator scaleX1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleX", 1f);
+                                ObjectAnimator scaleY1 = ObjectAnimator.ofFloat(fabViewArchive, "scaleY", 1f);
+                                AnimatorSet animatorSet1 = new AnimatorSet();
+                                animatorSet1.playTogether(scaleX1, scaleY1);
+                                animatorSet1.setDuration(400); // animation duration in milliseconds
+                                animatorSet1.start();
+
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            adapter.notifyItemInserted(pos);
+
+                            pos++;
+
+                            textHandler.postDelayed(this, 500);
+                        }
+                    });
+
 
                 } else {
 
@@ -361,6 +369,8 @@ public class Dashboard extends AppCompatActivity {
                     animatorSet1.playTogether(scaleX1, scaleY1);
                     animatorSet1.setDuration(400); // animation duration in milliseconds
                     animatorSet1.start();
+
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 Constant.refreshDashboard = false;
@@ -382,6 +392,8 @@ public class Dashboard extends AppCompatActivity {
                 animatorSet1.playTogether(scaleX1, scaleY1);
                 animatorSet1.setDuration(400); // animation duration in milliseconds
                 animatorSet1.start();
+
+                progressBar.setVisibility(View.GONE);
             }
 
             updateStatus();
@@ -404,24 +416,28 @@ public class Dashboard extends AppCompatActivity {
                     if (status == 1 && !Constant.listCompletedTrips.contains(trip)) {
                         Constant.listCompletedTrips.add(trip);
                         updateAdapter(trip);
-                    } else if (status == 0 && !Constant.adapterInProgressTrips.contains(trip)) {
+                    } else if (status == 0) {
                         if (!Constant.listInProgressTrips.contains(trip)) {
                             Constant.listInProgressTrips.add(trip);
                         }
                         updateAdapter(trip);
                     } else if (status == 2) {
                         if (Constant.listInProgressTrips.contains(trip)) {
-                            Constant.adapterRemoveInProgressTrip = trip;
+                            /*Constant.adapterRemoveInProgressTrip = trip;*/
+                            Constant.listInProgressTrips.remove(trip);
                             updateAdapter(trip);
                         } else if (Constant.listStagingTrips.contains(trip)) {
-                            Constant.adapterRemoveStagingTrip = trip;
+                            //Constant.adapterRemoveStagingTrip = trip;
+                            Constant.listStagingTrips.remove(trip);
                             updateAdapter(trip);
                         }
-                    } else if (status == 3 && !Constant.adapterStagingTrips.contains(trip)) {
+                    } else if (status == 3) {
                         if (!Constant.listStagingTrips.contains(trip)) {
                             Constant.listStagingTrips.add(trip);
                         }
                         updateAdapter(trip);
+                    }else if (Constant.adapterInProgressTrips.contains(trip)) {
+                        Log.i("SYNC", "trip contained in adapter list");
                     }
                 }
 
@@ -441,9 +457,9 @@ public class Dashboard extends AppCompatActivity {
             int position = Constant.listTrips.indexOf(trip);
             if (position != -1) {
                 adapter.notifyItemChanged(position);
-                Log.i("SYNC", "Updated " + trip + " at position " + position);
+                Log.i("SYNCADAPTER", "Updated " + trip + " at position " + position);
             } else {
-                Log.w("SYNC", "Trip not found in list: " + trip);
+                Log.w("SYNCADAPTER", "Trip not found in list: " + trip);
             }
         });
     }

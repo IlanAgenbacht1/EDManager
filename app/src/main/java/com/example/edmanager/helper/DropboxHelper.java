@@ -165,6 +165,19 @@ public class DropboxHelper {
                 if (resultItem.contains(".json")) {
 
                     downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH  + Constant.company + "/");
+
+                    Constant.listTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    Constant.listConfiguredTrips.add(resultItem.substring(0, resultItem.length() - 5));
+
+                    if (!Constant.listTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
+
+                    if (JsonHelper.returnDeliveryCount(context, resultItem.substring(0, resultItem.length() - 5)) > 0 && !Constant.listConfiguredTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listConfiguredTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
                 }
             }
 
@@ -177,6 +190,20 @@ public class DropboxHelper {
                 if (resultItem.contains(".json")) {
 
                     downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_STAGING_PATH);
+
+                    if (!Constant.listTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
+
+                    if (JsonHelper.returnDeliveryCount(context, resultItem.substring(0, resultItem.length() - 5)) > 0 && !Constant.listConfiguredTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listConfiguredTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
+
+                    if (!Constant.listStagingTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+                        Constant.listStagingTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
                 }
             }
 
@@ -189,6 +216,21 @@ public class DropboxHelper {
                 if (resultItem.contains(".json")) {
 
                     downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_IN_PROGRESS_PATH);
+
+                    if (!Constant.listTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
+
+                    if (JsonHelper.returnDeliveryCount(context, resultItem.substring(0, resultItem.length() - 5)) > 0 && !Constant.listConfiguredTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listConfiguredTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
+
+                    if (!Constant.listInProgressTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                        Constant.listInProgressTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                    }
                 }
             }
 
@@ -207,6 +249,21 @@ public class DropboxHelper {
                     if (resultItem.contains(".json")) {
 
                         downloadFile(context, resultItem.substring(0, resultItem.length() - 5), DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + resultItem.substring(0, resultItem.length() - 5) + "/");
+
+                        if (!Constant.listTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                            Constant.listTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                        }
+
+                        if (JsonHelper.returnDeliveryCount(context, resultItem.substring(0, resultItem.length() - 5)) > 0 && !Constant.listConfiguredTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                            Constant.listConfiguredTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                        }
+
+                        if (!Constant.listCompletedTrips.contains(resultItem.substring(0, resultItem.length() - 5))) {
+
+                            Constant.listCompletedTrips.add(resultItem.substring(0, resultItem.length() - 5));
+                        }
                     }
                 }
             }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -32,6 +33,7 @@ public class NewDeliveryDetail extends AppCompatActivity {
     private ParcelAdapter adapter;
     private Button buttonAddParcel, buttonCreateDelivery;
     private EditText editTextParcel;
+    private TextView textViewLabel;
 
 
     @Override
@@ -43,6 +45,7 @@ public class NewDeliveryDetail extends AppCompatActivity {
         buttonAddParcel = findViewById(R.id.NewDeliveryDetail_buttonAddParcel);
         editTextParcel = findViewById(R.id.NewDeliveryDetail_editTextParcel);
         buttonCreateDelivery = findViewById(R.id.NewDeliveryDetail_createDelivery);
+        textViewLabel = findViewById(R.id.NewDeliveryDetail_textViewParcels);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -50,31 +53,34 @@ public class NewDeliveryDetail extends AppCompatActivity {
             @Override
             public void onItemClick(String item) {
 
-                AlertDialog dialog = new AlertDialog.Builder(NewDeliveryDetail.this, R.style.AlertDialogStyle).create();
+                if (!Constant.viewDelivery) {
 
-                dialog.setTitle("Remove Item " + item + "?");
+                    AlertDialog dialog = new AlertDialog.Builder(NewDeliveryDetail.this, R.style.AlertDialogStyle).create();
 
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    dialog.setTitle("Remove Item " + item + "?");
 
-                        Constant.listParcels.remove(item);
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                        adapter.notifyDataSetChanged();
+                            Constant.listParcels.remove(item);
 
-                        dialog.cancel();
-                    }
-                });
+                            adapter.notifyDataSetChanged();
 
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                            dialog.cancel();
+                        }
+                    });
 
-                        dialog.cancel();
-                    }
-                });
+                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                dialog.show();
+                            dialog.cancel();
+                        }
+                    });
+
+                    dialog.show();
+                }
             }
         });
 
@@ -101,25 +107,36 @@ public class NewDeliveryDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!Constant.listParcels.isEmpty()) {
+                if (!Constant.viewDelivery) {
 
-                    Constant.deliveryData.setNumberOfParcels(Constant.listParcels.size());
-                    Constant.deliveryData.setParcelNumbers(Constant.listParcels);
+                    if (!Constant.listParcels.isEmpty()) {
 
-                    if (Constant.deliveryEdit) {
+                        Constant.deliveryData.setNumberOfParcels(Constant.listParcels.size());
+                        Constant.deliveryData.setParcelNumbers(Constant.listParcels);
 
-                        JsonHelper.removeDelivery(getApplicationContext(), Constant.trip, Constant.deliveryData);
+                        if (Constant.deliveryEdit) {
 
-                        uploadDelivery();
+                            JsonHelper.removeDelivery(getApplicationContext(), Constant.trip, Constant.deliveryData);
+
+                            uploadDelivery();
+
+                        } else {
+
+                            uploadDelivery();
+                        }
 
                     } else {
 
-                        uploadDelivery();
+                        ToastLogger.message(NewDeliveryDetail.this, "Parcels not specified");
                     }
 
                 } else {
 
-                    ToastLogger.message(NewDeliveryDetail.this, "Parcels not specified");
+                    Constant.viewDelivery = false;
+
+                    startActivity(new Intent(NewDeliveryDetail.this, DetailDashboard.class));
+
+                    finish();
                 }
             }
         });
@@ -129,6 +146,14 @@ public class NewDeliveryDetail extends AppCompatActivity {
         if (Constant.deliveryEdit) {
 
             buttonCreateDelivery.setText("Update Delivery");
+        }
+
+        if (Constant.viewDelivery) {
+
+            editTextParcel.setVisibility(View.GONE);
+            buttonAddParcel.setVisibility(View.GONE);
+            textViewLabel.setText("Parcels:");
+            buttonCreateDelivery.setText("CLOSE");
         }
     }
 

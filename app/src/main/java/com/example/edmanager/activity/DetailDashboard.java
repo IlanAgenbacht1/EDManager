@@ -74,6 +74,32 @@ public class DetailDashboard extends AppCompatActivity {
                     startActivity(new Intent(DetailDashboard.this, NewDeliveryHeader.class));
 
                     finish();
+
+                } else {
+
+                    Constant.viewDelivery = true;
+                    Constant.listParcels = new ArrayList<>();
+
+                    int position = 0;
+
+                    for (int i = 0; i < listDeliveries.size(); i++) {
+
+                        if (listDeliveries.get(i).getDocument().equals(item)) {
+
+                            position = i;
+                        }
+                    }
+
+                    Constant.deliveryData = listDeliveries.get(position);
+
+                    for (String parcel : Constant.deliveryData.getParcelNumbers()) {
+
+                        Constant.listParcels.add(parcel);
+                    }
+
+                    startActivity(new Intent(DetailDashboard.this, NewDeliveryDetail.class));
+
+                    finish();
                 }
             }
 
@@ -369,7 +395,7 @@ public class DetailDashboard extends AppCompatActivity {
 
         recyclerView.setAdapter(detailAdapter);
 
-        textViewTrip.setText("SHOWING DELIVERIES FOR " + Constant.trip);
+        textViewTrip.setText(Constant.trip + " DELIVERIES");
 
         if (Constant.tripStaging && listDeliveries != null && !listDeliveries.isEmpty()) {
 

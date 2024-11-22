@@ -8,7 +8,7 @@
     android:padding="5dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:background="@drawable/border_dashboard_status_notconfigured"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="7dp">
 
     <TextView
         android:id="@+id/textViewTrip"
