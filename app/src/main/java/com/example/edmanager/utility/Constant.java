@@ -24,10 +24,11 @@ public class Constant {
     public static ArrayList<String> adapterInProgressTrips = new ArrayList<>();
     public static ArrayList<String> listCompletedTrips = new ArrayList<>();
     public static ArrayList<String> listStagingTrips = new ArrayList<>();
-    public static ArrayList<String> adapterStagingTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteTrips = new ArrayList<>();
     public static ArrayList<String> listDeleteDeliveries = new ArrayList<>();
     public static ArrayList<String> listDeliveryNames = new ArrayList<>();
+    public static ArrayList<DeliveryModel> listReturns = new ArrayList<>();
+
 
     public static int deliveryCount;
 

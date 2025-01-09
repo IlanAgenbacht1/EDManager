@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +47,7 @@ public class DropboxHelper {
     private static final String DROPBOX_COMPLETED_PATH = "/Completed/";
     private static final String DROPBOX_STAGING_PATH = "/Staging/";
     private static final String DROPBOX_ARCHIVE_PATH = "/Completed/Archive/";
+    private static final String DROPBOX_RETURNS_PATH = "/Returns/returns.json";
     private static final String LOCAL_IMAGE_PATH = "/DeliveryApp/DeliveryImage/";
     private static final String LOCAL_SIGNATURE_PATH = "/DeliveryApp/DeliverySignature/";
 
@@ -448,6 +450,29 @@ public class DropboxHelper {
         try {
 
             getClient().files().moveV2(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_COMPLETED_PATH + trip, DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_ARCHIVE_PATH + trip);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void fetchReturnsFile(Context context) {
+        try {
+
+            File file = new File(context.getFilesDir() + "/Returns/", "returns.json");
+
+            if (!file.exists()) {
+
+                file.getParentFile().mkdirs();
+            }
+
+            try (OutputStream outputStream = new FileOutputStream(new File(file.getPath()))) {
+
+                getClient().files().downloadBuilder(DROPBOX_CUSTOMER_PATH + Constant.company + DROPBOX_RETURNS_PATH).download(outputStream);
+
+            }
 
         } catch (Exception e) {
 

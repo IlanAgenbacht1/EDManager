@@ -12,7 +12,6 @@ public class DeliveryModel {
     private String address;
     private String contactName;
     private String contactNumber;
-
     private Location location;
     private double latitude;
     private double longitude;
@@ -24,6 +23,11 @@ public class DeliveryModel {
     private String imagePath;
     private String signPath;
     private String comment;
+
+    private String reference;
+    private String itemCode;
+    private String quantity;
+
 
     // Getters and setters
 
@@ -76,4 +80,13 @@ public class DeliveryModel {
 
     public void setComment(String comment) { this.comment = comment; }
     public String getComment() { return comment; }
+
+    public void setReference(String reference) { this.reference = reference; }
+    public String getReference() { return reference; }
+
+    public void setItemCode(String itemCode) { this.itemCode = itemCode; }
+    public String getItemCode() { return itemCode; }
+
+    public void setQuantity(String quantity) { this.quantity = quantity; }
+    public String getQuantity() { return quantity; }
 }

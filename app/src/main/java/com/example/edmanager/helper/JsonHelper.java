@@ -279,4 +279,56 @@ public class JsonHelper {
         }
     }
 
+
+    public static ArrayList<DeliveryModel> parseReturnsData (Context context) {
+        try {
+
+            StringBuilder jsonString = new StringBuilder();
+
+            JSONObject returnsData;
+
+            File file = new File(context.getFilesDir() + "/Returns/", "returns.json");
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+
+                    jsonString.append(line);
+                }
+
+                returnsData = new JSONObject(jsonString.toString());
+            }
+
+            JSONArray jsonArray = returnsData.getJSONArray("returns");
+
+            ArrayList<DeliveryModel> listReturns = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+                DeliveryModel data = new DeliveryModel();
+
+                JSONObject jsonData = jsonArray.getJSONObject(i);
+
+                data.setItemCode(jsonData.getString("itemNumber"));
+                data.setQuantity(jsonData.getString("quantity"));
+                data.setCustomerName(jsonData.getString("customer"));
+                data.setComment(jsonData.getString("comment"));
+                data.setReference(jsonData.getString("reference"));
+                data.setTime(jsonData.getString("date"));
+
+                listReturns.add(data);
+            }
+
+            return listReturns;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
 }

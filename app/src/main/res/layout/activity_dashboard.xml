@@ -9,6 +9,24 @@
     android:padding="8dp"
     android:background="@color/pearl">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabReturns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:visibility="invisible"
+        app:backgroundTint="@color/pearl"
+        app:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/theme"
+        app:srcCompat="@drawable/return_icon"
+        app:tint="@color/theme" />
+
     <TextView
         android:id="@+id/textViewTripLabel"
         android:layout_width="wrap_content"

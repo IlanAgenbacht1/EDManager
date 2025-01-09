@@ -42,15 +42,12 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    Button buttonCreateTrip;
-    ConstraintLayout buttonDeleteTrip, constraintLayout;
+    ConstraintLayout constraintLayout;
     EditText tripEditText;
-    TextView textViewStatus;
-    FloatingActionButton fabCreateTrip, fabDelete, fabViewArchive;
+    FloatingActionButton fabCreateTrip, fabDelete, fabViewArchive, fabReturn;
     ProgressBar progressBar;
     DashboardAdapter adapter;
     RecyclerView recyclerView;
-    Boolean deleteModeAnimated;
     int pos = 0;
     File[] localTrips;
 
@@ -65,6 +62,7 @@ public class Dashboard extends AppCompatActivity {
         fabCreateTrip = findViewById(R.id.fabCreateTrip);
         fabDelete = findViewById(R.id.fabDeleteTrip);
         fabViewArchive = findViewById(R.id.fabViewArchive);
+        fabReturn = findViewById(R.id.fabReturns);
         progressBar = findViewById(R.id.tripDashProgressBar);
 
         localTrips = null;
@@ -275,6 +273,16 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        fabReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(Dashboard.this, ReturnsDashboard.class));
+
+                finish();
+            }
+        });
+
         updateFiles();
     }
 
@@ -323,6 +331,14 @@ public class Dashboard extends AppCompatActivity {
                                 animatorSet1.setDuration(400); // animation duration in milliseconds
                                 animatorSet1.start();
 
+                                fabReturn.setVisibility(View.VISIBLE);
+                                ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabReturn, "scaleX", 1f);
+                                ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabReturn, "scaleY", 1f);
+                                AnimatorSet animatorSet2 = new AnimatorSet();
+                                animatorSet2.playTogether(scaleX2, scaleY2);
+                                animatorSet2.setDuration(400); // animation duration in milliseconds
+                                animatorSet2.start();
+
                                 progressBar.setVisibility(View.GONE);
                             }
 
@@ -370,6 +386,14 @@ public class Dashboard extends AppCompatActivity {
                     animatorSet1.setDuration(400); // animation duration in milliseconds
                     animatorSet1.start();
 
+                    fabReturn.setVisibility(View.VISIBLE);
+                    ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabReturn, "scaleX", 1f);
+                    ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabReturn, "scaleY", 1f);
+                    AnimatorSet animatorSet2 = new AnimatorSet();
+                    animatorSet2.playTogether(scaleX2, scaleY2);
+                    animatorSet2.setDuration(400); // animation duration in milliseconds
+                    animatorSet2.start();
+
                     progressBar.setVisibility(View.GONE);
                 }
 
@@ -392,6 +416,14 @@ public class Dashboard extends AppCompatActivity {
                 animatorSet1.playTogether(scaleX1, scaleY1);
                 animatorSet1.setDuration(400); // animation duration in milliseconds
                 animatorSet1.start();
+
+                fabReturn.setVisibility(View.VISIBLE);
+                ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(fabReturn, "scaleX", 1f);
+                ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(fabReturn, "scaleY", 1f);
+                AnimatorSet animatorSet2 = new AnimatorSet();
+                animatorSet2.playTogether(scaleX2, scaleY2);
+                animatorSet2.setDuration(400); // animation duration in milliseconds
+                animatorSet2.start();
 
                 progressBar.setVisibility(View.GONE);
             }

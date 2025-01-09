@@ -23,9 +23,6 @@
             android:name=".activity.CapturedData"
             android:exported="false" />
         <activity
-            android:name=".activity.Parcel"
-            android:exported="false" />
-        <activity
             android:name=".activity.NewDeliveryDetail"
             android:exported="false" />
         <activity
@@ -40,6 +37,9 @@
             android:exported="false" />
         <activity
             android:name=".activity.DetailDashboardCompleted"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ReturnsDashboard"
             android:exported="false" />
         <activity
             android:name=".activity.Splash"
