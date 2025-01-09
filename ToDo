@@ -1,17 +1,13 @@
 FUNCTIONALITY
 
-- Validate client when logging in.
+- Ability to search or order Returns dashboard.
 
-- Archive completed trips. 
+- Validate client when logging in.
 
 - Check if parcels have been flagged.
 
 
 UI
-
-- Captured data screen.
-
-- Basic clean animation for archived UI.
 
 - Flagged parcels.
 
@@ -19,5 +15,3 @@ UI
 !!BUGS!!
 
 - Trip status not updating correctly.
-
-- Fabs on main dashboard not animating correctly.
