@@ -29,23 +29,23 @@ import java.util.Locale;
 
 public class ReturnsAdapter extends RecyclerView.Adapter<ReturnsAdapter.ViewHolder> {
 
-    //private OnItemClickListener listener;
+    private OnItemClickListener listener;
     private AdapterView.OnItemLongClickListener longClickListener;
     private ArrayList<DeliveryModel> listReturns;
     private Context context;
 
 
-    public ReturnsAdapter(ArrayList<DeliveryModel> listReturns, Context context) {
+    public ReturnsAdapter(ArrayList<DeliveryModel> listReturns, Context context, OnItemClickListener listener) {
         this.context = context;
-        //this.listener = listener;
+        this.listener = listener;
         this.listReturns = listReturns;
     }
 
 
-    /*public interface OnItemClickListener {
-        void onItemClick(String tripNumber);
-        void onItemLongClick(String tripNumber);
-    }*/
+    public interface OnItemClickListener {
+        void onItemClick(String itemNumber);
+        void onItemLongClick(String itemNumber);
+    }
 
 
     @NonNull
@@ -68,7 +68,7 @@ public class ReturnsAdapter extends RecyclerView.Adapter<ReturnsAdapter.ViewHold
         DeliveryModel returnData = listReturns.get(position);
 
         try {
-            holder.bind(returnData);
+            holder.bind(returnData, listener);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -100,7 +100,7 @@ public class ReturnsAdapter extends RecyclerView.Adapter<ReturnsAdapter.ViewHold
             textViewDate = itemView.findViewById(R.id.textViewDate);
         }
 
-        public void bind(DeliveryModel data) throws ParseException {
+        public void bind(DeliveryModel data, OnItemClickListener listener) throws ParseException {
 
             textViewCustomer.setText(data.getCustomerName());
             textViewItemCode.setText(data.getItemCode());
@@ -114,12 +114,12 @@ public class ReturnsAdapter extends RecyclerView.Adapter<ReturnsAdapter.ViewHold
 
             textViewDate.setText(formattedDate);
 
-            /*itemView.setOnClickListener(view -> listener.onItemClick(data.getItemCode()));
+            itemView.setOnClickListener(view -> listener.onItemClick(data.getItemCode()));
 
             itemView.setOnLongClickListener(view -> {
                 listener.onItemLongClick(data.getItemCode());
                 return true; // Return true to indicate the event was handled
-            });*/
+            });
         }
 
     }

@@ -10,10 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +31,12 @@ import com.example.edmanager.helper.DropboxHelper;
 import com.example.edmanager.helper.JsonHelper;
 import com.example.edmanager.utility.Constant;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ReturnsDashboard extends AppCompatActivity {
@@ -53,7 +59,72 @@ public class ReturnsDashboard extends AppCompatActivity {
 
         listReturns = new ArrayList<>();
 
-        adapter = new ReturnsAdapter(listReturns, ReturnsDashboard.this);
+        adapter = new ReturnsAdapter(listReturns, ReturnsDashboard.this, new ReturnsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String itemNumber) {
+
+                String date = "";
+                String time = "";
+                String comment = "";
+                String reference = "";
+
+                for (DeliveryModel returnData : listReturns) {
+
+                    if (returnData.getItemCode().equals(itemNumber)) {
+
+                        SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
+                        Date d = null;
+                        try {
+                            d = inputFormat.parse(returnData.getTime());
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                        date = outputFormat.format(d);
+
+                        SimpleDateFormat outputFormat2 = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                        time = outputFormat2.format(d);
+
+                        comment = returnData.getComment();
+                        reference = returnData.getReference();
+                    }
+                }
+
+                LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                View dialogView = inflater.inflate(R.layout.returns_dialog_layout, null);
+
+                // Initialize fields in the dialog
+                TextView dateField = dialogView.findViewById(R.id.dateField);
+                TextView timeField = dialogView.findViewById(R.id.timeField);
+                TextView commentField = dialogView.findViewById(R.id.commentField);
+                TextView referenceField = dialogView.findViewById(R.id.referenceField);
+
+                dateField.setText(date);
+                timeField.setText(time);
+                commentField.setText("Comment: " + comment);
+                referenceField.setText("Reference: " + reference);
+
+                // Build the AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(ReturnsDashboard.this, R.style.AlertDialogStyle);
+                builder.setView(dialogView)
+                        .setTitle("Return Details")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.cancel();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+
+            @Override
+            public void onItemLongClick(String itemNumber) {
+
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
