@@ -1,21 +1,17 @@
 FUNCTIONALITY
 
 - Ability to search or order Returns dashboard.
-
 - Validate client when logging in.
-
 - Check if parcels have been flagged.
-
 - Add created date/time for trips and deliveries
-
 
 UI
 
 - Flagged parcels.
-
+- Sort trips in main dashboard.
 - ED logo only for deployed trips and in progress trips. Set logo color to yellow for in progress trips.
-
 
 !!BUGS!!
 
-- Trip status not updating correctly.
+- Trip status not updating correctly.\
+- Crash when adding delivery.
