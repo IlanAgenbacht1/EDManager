@@ -18,5 +18,6 @@ UI
 
 !!BUGS!!
 
+- Unable to edit delivery parcels. Other strange and problematic behaviour when editing deliveries.
 - Trip status not updating correctly.\
 - Crash when adding delivery.
