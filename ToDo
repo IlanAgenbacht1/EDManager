@@ -1,7 +1,5 @@
 FUNCTIONALITY
 
-- Ability to search or order Returns dashboard.
-- Check if parcels have been flagged.
 - Add created date/time for trips and deliveries.
 - Validate client when logging in.
 - Archived trips are handled locally. Switch to dropbox syncs.
@@ -10,7 +8,7 @@ FUNCTIONALITY
 UI
 
 - Flagged parcels.
-- Sort trips in main dashboard.
+- Sort trips in main dashboard. Sort Archive.
 - Redo main dashboard items:
   - ED logo only for trips with a status. 
   - Set logo color to match status.
