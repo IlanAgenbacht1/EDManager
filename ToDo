@@ -5,6 +5,7 @@ FUNCTIONALITY
 - Add created date/time for trips and deliveries.
 - Validate client when logging in.
 - Archived trips are handled locally. Switch to dropbox syncs.
+- Scan PArcels in when creating deliveries
 
 UI
 
