@@ -2,6 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+// Keys live in local.properties (gitignored), never in source.
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withInputStream { localProps.load(it) }
+}
+
 android {
     namespace 'com.example.edmanager'
     compileSdk 34
@@ -14,6 +21,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [mapsApiKey: localProps.getProperty('MAPS_API_KEY', '')]
+        buildConfigField "String", "DROPBOX_REFRESH_TOKEN", "\"${localProps.getProperty('DROPBOX_REFRESH_TOKEN', '')}\""
+        buildConfigField "String", "DROPBOX_APP_KEY", "\"${localProps.getProperty('DROPBOX_APP_KEY', '')}\""
+        buildConfigField "String", "DROPBOX_APP_SECRET", "\"${localProps.getProperty('DROPBOX_APP_SECRET', '')}\""
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {

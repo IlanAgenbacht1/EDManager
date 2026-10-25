@@ -14,6 +14,7 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.WriteMode;
+import com.example.edmanager.BuildConfig;
 import com.example.edmanager.database.DeliveryModel;
 import com.example.edmanager.utility.Constant;
 import com.example.edmanager.utility.ToastLogger;
@@ -37,9 +38,9 @@ import java.util.stream.Collectors;
 
 public class DropboxHelper {
 
-    private static String REFRESH_TOKEN = "z5wLDJpEALUAAAAAAAAAAaXxmMgnV5mEjNGWCcU81x0x7TmiG9kQLUU7IlGoTCay";
-    private static String APP_KEY = "ma2o6e9amxvvuqk";
-    private static String APP_SECRET = "q1t553htqu039lh";
+    private static String REFRESH_TOKEN = BuildConfig.DROPBOX_REFRESH_TOKEN;
+    private static String APP_KEY = BuildConfig.DROPBOX_APP_KEY;
+    private static String APP_SECRET = BuildConfig.DROPBOX_APP_SECRET;
 
     private static final String DROPBOX_CLIENT_PATH = "dropbox/";
     private static final String DROPBOX_CUSTOMER_PATH = "/Customers/";
